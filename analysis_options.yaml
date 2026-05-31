@@ -1,0 +1,14 @@
+include: package:lints/recommended.yaml
+
+analyzer:
+  exclude:
+    - toolchain/mason/**/__brick__/**
+
+linter:
+  rules:
+    - sort_constructors_first
+    - sort_unnamed_constructors_first
+    - always_put_required_named_parameters_first
+    - prefer_const_constructors
+    - prefer_final_fields
+    - prefer_relative_imports
