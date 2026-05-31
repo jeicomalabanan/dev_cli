@@ -1,0 +1,5 @@
+# IntelliJ related
+.idea/
+
+# Flutter/Dart/Pub related
+.dart_tool/
