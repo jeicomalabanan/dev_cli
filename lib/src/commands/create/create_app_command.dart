@@ -28,12 +28,37 @@ final class CreateAppCommand extends Command<void> {
     logger.info('Creating an app...');
     logger.detail('Name: $name');
 
+    final currentDir = Directory.current.path;
+    final appDir = '$currentDir/$name';
+
+    await Process.run('flutter', ['create', name]);
+
+    await _deletePath('$appDir/test');
+    await _deletePath('$appDir/lib/main.dart');
+    // await _deletePath('$appDir/README.md');
+
     final generator = await MasonGenerator.fromBundle(appBundle);
     await generator.generate(
       DirectoryGeneratorTarget(Directory.current),
       vars: {'name': name},
+      fileConflictResolution: FileConflictResolution.overwrite,
     );
 
     logger.success('App "$name" created successfully.');
+  }
+}
+
+Future<void> _deletePath(String path) async {
+  final entity = FileSystemEntity.typeSync(path);
+
+  switch (entity) {
+    case FileSystemEntityType.file:
+      await File(path).delete();
+      break;
+    case FileSystemEntityType.directory:
+      await Directory(path).delete(recursive: true);
+      break;
+    default:
+      break;
   }
 }
