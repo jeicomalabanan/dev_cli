@@ -3,3 +3,8 @@
 
 # Flutter/Dart/Pub related
 .dart_tool/
+
+# Local Mason Files
+bricks/**/.dart_tool/
+bricks/**/build/
+bricks/**/pubspec.lock
