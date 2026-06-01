@@ -32,7 +32,10 @@ dart pub global activate --source git https://github.com/jeicomalabanan/dev_cli
 Activate the latest version directly from local:
 
 ```shell
-dart pub global activate --source path bin
+dart pub global activate --source path .
+
+# or using path of `bin`:
+# dart pub global activate --source path <bin-path>
 ```
 
 Verify the installation:
