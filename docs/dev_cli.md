@@ -27,6 +27,9 @@ Activate the latest version directly from GitHub:
 
 ```shell
 dart pub global activate --source git https://github.com/jeicomalabanan/dev_cli
+
+# or with branch
+# dart pub global activate --source git https://github.com/jeicomalabanan/dev_cli --git-ref develop
 ```
 
 Activate the latest version directly from local:
