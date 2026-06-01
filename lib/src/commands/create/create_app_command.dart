@@ -34,12 +34,13 @@ final class CreateAppCommand extends Command<void> {
     await Process.run('flutter', ['create', name]);
 
     await _deletePath('$appDir/test');
-    await _deletePath('$appDir/lib/main.dart');
+    await _deletePath('$appDir/lib');
+    await _deletePath('$appDir/pubspec.yaml');
     // await _deletePath('$appDir/README.md');
 
     final generator = await MasonGenerator.fromBundle(appBundle);
     await generator.generate(
-      DirectoryGeneratorTarget(Directory.current),
+      DirectoryGeneratorTarget(Directory(appDir)),
       vars: {'name': name},
       fileConflictResolution: FileConflictResolution.overwrite,
     );
