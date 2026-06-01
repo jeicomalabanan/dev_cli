@@ -3,6 +3,8 @@ import 'dart:io';
 import 'package:mason/mason.dart';
 
 void run(HookContext context) async {
+  print('PRE_GEN RUNNING');
+
   final appName = context.vars['name'] as String;
 
   final currentDirPath = Directory.current.path;
