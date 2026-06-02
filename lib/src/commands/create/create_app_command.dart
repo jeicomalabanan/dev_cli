@@ -91,7 +91,10 @@ final class CreateAppCommand extends Command<void> {
 
     final org =
         argResults?[_argOrg] as String? ??
-        logger.prompt('What is your organization identifier?');
+        logger.prompt(
+          'What is your organization identifier?',
+          defaultValue: 'team.workspace',
+        );
 
     final platforms =
         argResults?[_argPlatforms] as String? ??
