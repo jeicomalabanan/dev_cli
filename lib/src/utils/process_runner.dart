@@ -17,7 +17,7 @@ final class ProcessRunner {
   }
 
   static ProcessResult createFlutterApp({
-    required String appName,
+    required String name,
     required String org,
     required String platforms,
     String? workingDirectory,
@@ -27,7 +27,7 @@ final class ProcessRunner {
       args: [
         'create',
         '--template=app',
-        appName,
+        name,
         '--org=$org',
         '--platforms=$platforms',
         '--empty',

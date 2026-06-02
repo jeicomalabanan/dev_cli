@@ -9,7 +9,7 @@ import '../../../bundles/monorepo_bundle.dart';
 
 final class CreateMonorepoCommand extends Command<void> {
   CreateMonorepoCommand(this.logger) {
-    argParser.addOption(_argName, abbr: 'n', help: 'Name of the monorepo.');
+    argParser.addOption(_argName, help: 'Name of the monorepo.');
   }
 
   static const _argName = 'name';
@@ -40,7 +40,7 @@ final class CreateMonorepoCommand extends Command<void> {
       exit(1);
     }
 
-    // generate monorepo template from mason bricks
+    // generate monorepo from mason bricks
     final generator = await MasonGenerator.fromBundle(monorepoBundle);
     await generator.generate(
       DirectoryGeneratorTarget(Directory(currentDir)),

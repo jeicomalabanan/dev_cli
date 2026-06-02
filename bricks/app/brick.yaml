@@ -8,5 +8,4 @@ environment:
 vars:
   name:
     type: string
-    description: Name of the app.
-    prompt: What is the name of the app?
+    description: Name of the Flutter application.

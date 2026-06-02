@@ -6,27 +6,36 @@ import 'package:mason/mason.dart';
 import 'package:path/path.dart' as path;
 
 import '../../../bundles/app_bundle.dart';
-import '../../utils/file_util.dart';
+import '../../extensions/logger_extensions.dart';
+import '../../models/enums/app_platforms.dart';
 import '../../utils/process_runner.dart';
+
+const _argName = 'name';
+const _argOrg = 'org';
+const _argPlatforms = 'platforms';
+
+final class _AppArgs {
+  const _AppArgs({
+    required this.name,
+    required this.org,
+    required this.platforms,
+  });
+
+  final String name;
+  final String org;
+  final String platforms;
+}
 
 final class CreateAppCommand extends Command<void> {
   CreateAppCommand(this.logger) {
     argParser
-      ..addOption(
-        _argAppName,
-        abbr: 'n',
-        help: 'Flutter application name (snake_case).',
-      )
+      ..addOption(_argName, help: 'Name of the Flutter application.')
       ..addOption(_argOrg, help: 'Organization identifier (e.g. com.example).')
       ..addOption(
         _argPlatforms,
-        help: 'Comma-separated list of target platforms (e.g. android,ios).',
+        help: 'Platforms supported by this application (e.g. android,ios,web).',
       );
   }
-
-  static const _argAppName = 'app_name';
-  static const _argOrg = 'org';
-  static const _argPlatforms = 'platforms';
 
   final Logger logger;
 
@@ -38,39 +47,22 @@ final class CreateAppCommand extends Command<void> {
 
   @override
   FutureOr<void>? run() async {
-    final appName =
-        argResults?[_argAppName] as String? ??
-        logger.prompt('What is the app name?');
-
-    final org =
-        argResults?[_argOrg] as String? ??
-        logger.prompt('What is the organization identifier?');
-
-    final platforms =
-        argResults?[_argPlatforms] as String? ??
-        logger.prompt('Which platforms should be supported?');
-
-    logger.info('Creating an app...');
-    logger.detail('Name: $appName');
-    logger.detail('Org: $org');
-    logger.detail('Platforms: $platforms');
+    final appArgs = _getArgs() ?? exit(1);
 
     final currentDir = Directory.current.path;
-    final appDir = path.join(currentDir, appName);
+    final appDir = path.join(currentDir, appArgs.name);
 
-    final validationError = _validateAppNotExists(
-      name: appName,
-      outputDir: currentDir,
-    );
-    if (validationError != null) {
-      logger.err(validationError);
+    // check if app already exists
+    if (Directory(appDir).existsSync()) {
+      logger.err('App "${appArgs.name}" already exists at $appDir');
       exit(1);
     }
 
+    // create flutter application
     final result = ProcessRunner.createFlutterApp(
-      appName: appName,
-      org: org,
-      platforms: platforms,
+      name: appArgs.name,
+      org: appArgs.org,
+      platforms: appArgs.platforms,
       workingDirectory: currentDir,
     );
     if (result.exitCode != 0) {
@@ -78,30 +70,52 @@ final class CreateAppCommand extends Command<void> {
       exit(result.exitCode);
     }
 
-    final pathsToDelete = ['$appDir/test', '$appDir/pubspec.yaml'];
-    await FileUtil.deletePaths(pathsToDelete);
+    // final pathsToDelete = ['$appDir/test', '$appDir/pubspec.yaml'];
+    // await FileUtil.deletePaths(pathsToDelete);
 
+    // generate monorepo from mason bricks
     final generator = await MasonGenerator.fromBundle(appBundle);
     await generator.generate(
       DirectoryGeneratorTarget(Directory(appDir)),
-      vars: {_argAppName: appName},
+      vars: {_argName: name},
       fileConflictResolution: FileConflictResolution.overwrite,
     );
 
-    logger.success('App "$appName" created successfully.');
+    logger.success('✅ App "${appArgs.name}" created successfully.');
   }
 
-  String? _validateAppNotExists({
-    required String name,
-    required String outputDir,
-  }) {
-    final appPath = path.join(outputDir, name);
-    final dir = Directory(appPath);
+  _AppArgs? _getArgs() {
+    final name =
+        argResults?[_argName] as String? ??
+        logger.prompt('What is the name of the app?');
 
-    if (dir.existsSync()) {
-      return 'App "$name" already exists at $appPath';
+    final org =
+        argResults?[_argOrg] as String? ??
+        logger.prompt('What is your organization identifier?');
+
+    final platforms =
+        argResults?[_argPlatforms] as String? ??
+        logger.chooseAnyEnum(
+          message: 'What are your supported platforms?',
+          values: AppPlatform.values,
+          labelBuilder: (value) => value.label,
+          defaultValues: [
+            AppPlatform.android,
+            AppPlatform.ios,
+            AppPlatform.web,
+          ],
+        );
+
+    logger.info('🚀 Creating an app...');
+    logger.detail('Name: $name');
+    logger.detail('Org: $org');
+    logger.detail('Platforms: $platforms');
+
+    final shouldProceed = logger.confirm('Do you want to proceed?');
+    if (shouldProceed) {
+      return _AppArgs(name: name, org: org, platforms: platforms);
+    } else {
+      return null;
     }
-
-    return null;
   }
 }

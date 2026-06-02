@@ -9,4 +9,3 @@ vars:
   name:
     type: string
     description: Name of the monorepo.
-    prompt: What is the name of the monorepo?
