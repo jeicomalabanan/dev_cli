@@ -1,0 +1,45 @@
+import 'dart:async';
+import 'dart:io';
+
+import 'package:args/command_runner.dart';
+import 'package:mason/mason.dart';
+
+import '../../utils/process_runner.dart';
+
+final class UpgradeCommand extends Command<void> {
+  UpgradeCommand(this.logger);
+
+  final Logger logger;
+
+  @override
+  String get name => 'upgrade';
+
+  @override
+  String get description => 'Upgrade the Dev CLI to the latest version.';
+
+  @override
+  FutureOr<void>? run() async {
+    logger.info('🚀 Checking for updates...');
+
+    final result = ProcessRunner.run(
+      command: 'dart',
+      args: [
+        'pub',
+        'global',
+        'activate',
+        '--source',
+        'git',
+        'https://github.com/jeicomalabanan/dev_cli',
+        '--git-ref',
+        'develop',
+      ],
+    );
+
+    if (result.exitCode != 0) {
+      logger.err(result.stderr);
+      exit(result.exitCode);
+    }
+
+    logger.success('✅ Dev CLI upgraded successfully.');
+  }
+}

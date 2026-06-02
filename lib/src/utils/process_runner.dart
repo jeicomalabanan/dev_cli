@@ -20,7 +20,7 @@ final class ProcessRunner {
     required String appName,
     required String org,
     required String platforms,
-    required String workingDirectory,
+    String? workingDirectory,
   }) {
     return run(
       command: 'flutter',
@@ -38,7 +38,7 @@ final class ProcessRunner {
 
   static ProcessResult createFlutterPackage({
     required String packageName,
-    required String workingDirectory,
+    String? workingDirectory,
   }) {
     return run(
       command: 'flutter',
@@ -49,7 +49,7 @@ final class ProcessRunner {
 
   static ProcessResult createDartPackage({
     required String packageName,
-    required String workingDirectory,
+    String? workingDirectory,
   }) {
     return run(
       command: 'dart',
