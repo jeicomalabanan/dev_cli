@@ -20,14 +20,14 @@ final class ProcessRunner {
     required String name,
     required String org,
     required String platforms,
-    String? workingDirectory,
+    String? targetDirectory,
   }) {
     return run(
       command: 'flutter',
       args: [
         'create',
         '--template=app',
-        '$workingDirectory/$name',
+        '$targetDirectory/$name',
         '--org=$org',
         '--platforms=$platforms',
         '--empty',

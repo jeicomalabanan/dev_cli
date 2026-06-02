@@ -91,7 +91,7 @@ final class CreateAppCommand extends Command<void> {
       name: args.name,
       org: args.org,
       platforms: args.platforms.map((e) => e.name).join(','),
-      workingDirectory: appsDir,
+      targetDirectory: appsDir,
     );
     if (result.exitCode != 0) {
       logger.err(result.stderr);
@@ -130,13 +130,11 @@ final class CreateAppCommand extends Command<void> {
         argResults?[_argKeyOrg] as String? ??
         logger.prompt('Organization:', defaultValue: 'team.workspace');
 
-    final platformValues =
-        (argResults?[_argKeyPlatforms] as String?)
-            ?.split(',')
-            .map((name) => AppPlatform.values.byNameOrNull(name.trim()))
-            .nonNulls
-            .toList() ??
-        [];
+    final platformValues = (argResults?[_argKeyPlatforms] as String? ?? '')
+        .split(',')
+        .map((name) => AppPlatform.values.byNameOrNull(name.trim()))
+        .nonNulls
+        .toList();
     final platforms = platformValues.isNotEmpty
         ? platformValues
         : logger.chooseAnyEnum(
