@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:args/command_runner.dart';
 import 'package:mason/mason.dart';
@@ -37,7 +36,7 @@ final class UpgradeCommand extends Command<void> {
 
     if (result.exitCode != 0) {
       logger.err(result.stderr);
-      exit(result.exitCode);
+      return;
     }
 
     logger.success('✅ Dev CLI upgraded successfully.');

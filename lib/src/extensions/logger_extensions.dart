@@ -1,6 +1,21 @@
 import 'package:mason/mason.dart';
 
 extension LoggerPromptX on Logger {
+  T chooseOneEnum<T extends Enum>({
+    required String message,
+    required List<T> values,
+    required String Function(T value) labelBuilder,
+    required T defaultValue,
+  }) {
+    final selected = chooseOne(
+      message,
+      choices: values.map(labelBuilder).toList(),
+      defaultValue: labelBuilder(defaultValue),
+    );
+
+    return values.firstWhere((value) => labelBuilder(value) == selected);
+  }
+
   String chooseAnyEnum<T extends Enum>({
     required String message,
     required List<T> values,

@@ -10,16 +10,12 @@ import '../../extensions/logger_extensions.dart';
 import '../../models/enums/app_platforms.dart';
 import '../../utils/process_runner.dart';
 
-const _argName = 'name';
-const _argOrg = 'org';
-const _argPlatforms = 'platforms';
+const _argKeyName = 'name';
+const _argKeyOrg = 'org';
+const _argKeyPlatforms = 'platforms';
 
-final class _AppArgs {
-  const _AppArgs({
-    required this.name,
-    required this.org,
-    required this.platforms,
-  });
+final class _Args {
+  const _Args({required this.name, required this.org, required this.platforms});
 
   final String name;
   final String org;
@@ -29,10 +25,13 @@ final class _AppArgs {
 final class CreateAppCommand extends Command<void> {
   CreateAppCommand(this.logger) {
     argParser
-      ..addOption(_argName, help: 'Name of the Flutter application.')
-      ..addOption(_argOrg, help: 'Organization identifier (e.g. com.example).')
+      ..addOption(_argKeyName, help: 'Name of the Flutter application.')
       ..addOption(
-        _argPlatforms,
+        _argKeyOrg,
+        help: 'Organization identifier (e.g. com.example).',
+      )
+      ..addOption(
+        _argKeyPlatforms,
         help: 'Platforms supported by this application (e.g. android,ios,web).',
       );
   }
@@ -47,57 +46,59 @@ final class CreateAppCommand extends Command<void> {
 
   @override
   FutureOr<void>? run() async {
-    final appArgs = _getArgs() ?? exit(1);
+    final args = _promptArgs();
+    if (args == null) return;
 
     final currentDir = Directory.current.path;
-    final appDir = path.join(currentDir, appArgs.name);
+    final appsDir = path.join(currentDir, 'apps');
+    final appDir = path.join(appsDir, args.name);
 
     // check if app already exists
     if (Directory(appDir).existsSync()) {
-      logger.err('App "${appArgs.name}" already exists at $appDir');
-      exit(1);
+      logger.err('"${args.name}" already exists at $appDir');
+      return;
     }
 
     // create flutter application
     final result = ProcessRunner.createFlutterApp(
-      name: appArgs.name,
-      org: appArgs.org,
-      platforms: appArgs.platforms,
-      workingDirectory: currentDir,
+      name: args.name,
+      org: args.org,
+      platforms: args.platforms,
+      workingDirectory: appsDir,
     );
     if (result.exitCode != 0) {
       logger.err(result.stderr);
-      exit(result.exitCode);
+      return;
     }
 
-    // final pathsToDelete = ['$appDir/test', '$appDir/pubspec.yaml'];
+    // final pathsToDelete = ['$targetDir/test', '$targetDir/pubspec.yaml'];
     // await FileUtil.deletePaths(pathsToDelete);
 
-    // generate monorepo from mason bricks
+    // generate app from mason bricks
     final generator = await MasonGenerator.fromBundle(appBundle);
     await generator.generate(
       DirectoryGeneratorTarget(Directory(appDir)),
-      vars: {_argName: appArgs.name},
+      vars: {_argKeyName: args.name},
       fileConflictResolution: FileConflictResolution.overwrite,
     );
 
-    logger.success('✅ App "${appArgs.name}" created successfully.');
+    logger.success('✅ "${args.name}" created successfully.');
   }
 
-  _AppArgs? _getArgs() {
+  _Args? _promptArgs() {
     final name =
-        argResults?[_argName] as String? ??
+        argResults?[_argKeyName] as String? ??
         logger.prompt('What is the name of the app?');
 
     final org =
-        argResults?[_argOrg] as String? ??
+        argResults?[_argKeyOrg] as String? ??
         logger.prompt(
           'What is your organization identifier?',
           defaultValue: 'team.workspace',
         );
 
     final platforms =
-        argResults?[_argPlatforms] as String? ??
+        argResults?[_argKeyPlatforms] as String? ??
         logger.chooseAnyEnum(
           message: 'What are your supported platforms?',
           values: AppPlatform.values,
@@ -114,11 +115,6 @@ final class CreateAppCommand extends Command<void> {
     logger.detail('Organization : $org');
     logger.detail('Platforms    : $platforms');
 
-    final shouldProceed = logger.confirm('Do you want to proceed?');
-    if (shouldProceed) {
-      return _AppArgs(name: name, org: org, platforms: platforms);
-    } else {
-      return null;
-    }
+    return _Args(name: name, org: org, platforms: platforms);
   }
 }
