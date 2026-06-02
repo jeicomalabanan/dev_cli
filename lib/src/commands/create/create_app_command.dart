@@ -90,7 +90,7 @@ final class CreateAppCommand extends Command<void> {
     final result = ProcessRunner.createFlutterApp(
       name: args.name,
       org: args.org,
-      platforms: args.platforms.join(','),
+      platforms: args.platforms.map((e) => e.name).join(','),
       workingDirectory: appsDir,
     );
     if (result.exitCode != 0) {
@@ -128,10 +128,7 @@ final class CreateAppCommand extends Command<void> {
 
     final org =
         argResults?[_argKeyOrg] as String? ??
-        logger.prompt(
-          'Organization identifier:',
-          defaultValue: 'team.workspace',
-        );
+        logger.prompt('Organization:', defaultValue: 'team.workspace');
 
     final platformValues =
         (argResults?[_argKeyPlatforms] as String?)
@@ -143,7 +140,7 @@ final class CreateAppCommand extends Command<void> {
     final platforms = platformValues.isNotEmpty
         ? platformValues
         : logger.chooseAnyEnum(
-            message: 'Supported platforms:',
+            message: 'Choose supported platforms:',
             values: AppPlatform.values,
             defaultValues: [
               AppPlatform.android,

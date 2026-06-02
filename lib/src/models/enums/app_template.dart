@@ -7,7 +7,7 @@ extension AppTemplateX on AppTemplate {
   };
 
   String get description => switch (this) {
-    AppTemplate.basic => 'Clean flutter application.',
-    AppTemplate.monorepo => 'Reusable flutter application for monorepo.',
+    AppTemplate.basic => '',
+    AppTemplate.monorepo => '',
   };
 }
