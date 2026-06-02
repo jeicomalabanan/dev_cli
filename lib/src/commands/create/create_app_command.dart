@@ -77,9 +77,8 @@ final class CreateAppCommand extends Command<void> {
     final generator = await MasonGenerator.fromBundle(appBundle);
     await generator.generate(
       DirectoryGeneratorTarget(Directory(appDir)),
-      vars: {_argName: name},
+      vars: {_argName: appArgs.name},
       fileConflictResolution: FileConflictResolution.overwrite,
-      logger: logger,
     );
 
     logger.success('✅ App "${appArgs.name}" created successfully.');
