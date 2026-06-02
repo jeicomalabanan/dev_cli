@@ -9,8 +9,8 @@ import '../../../bundles/app_bundle.dart';
 import '../../extensions/logger_extensions.dart';
 import '../../models/enums/app_platform.dart';
 import '../../models/enums/app_template.dart';
-import '../../utils/enum_utils.dart';
 import '../../utils/process_runner.dart';
+import '../upgrade/enum_extensions.dart';
 
 const _argKeyTemplate = 'template';
 const _argKeyName = 'name';
@@ -25,10 +25,10 @@ final class _Args {
     required this.platforms,
   });
 
-  final String template;
+  final AppTemplate template;
   final String name;
   final String org;
-  final String platforms;
+  final List<AppPlatform> platforms;
 }
 
 final class CreateAppCommand extends Command<void> {
@@ -50,12 +50,11 @@ final class CreateAppCommand extends Command<void> {
       ..addOption(
         _argKeyOrg,
         help:
-            'The organization responsible for the new Flutter application, in reverse domain name notation (e.g. com.example). '
-            'This string is used in Java package names and as prefix in the iOS bundle identifier.',
+            'The organization responsible for the new Flutter application, in reverse domain name notation (e.g. com.example).',
       )
       ..addOption(
         _argKeyPlatforms,
-        help: ' The platforms supported by this application.',
+        help: 'The platforms supported by this application.',
         allowed: AppPlatform.values.map((e) => e.name).toList(),
         allowedHelp: {
           for (final platform in AppPlatform.values)
@@ -91,7 +90,7 @@ final class CreateAppCommand extends Command<void> {
     final result = ProcessRunner.createFlutterApp(
       name: args.name,
       org: args.org,
-      platforms: args.platforms,
+      platforms: args.platforms.join(','),
       workingDirectory: appsDir,
     );
     if (result.exitCode != 0) {
@@ -118,34 +117,40 @@ final class CreateAppCommand extends Command<void> {
     final template =
         AppTemplate.values.byNameOrNull(templateValue ?? '') ??
         logger.chooseOneEnum(
-          message: 'Choose template:',
-          values: AppTemplate.values,
+          message: 'Choose a template:',
+          values: AppTemplate.values.toList(),
           defaultValue: AppTemplate.monorepo,
         );
 
     final name =
         argResults?[_argKeyName] as String? ??
-        logger.prompt('What is the name of the app?');
+        logger.prompt('Name of the app:', defaultValue: 'user_app');
 
     final org =
         argResults?[_argKeyOrg] as String? ??
         logger.prompt(
-          'What is your organization identifier?',
+          'Organization identifier:',
           defaultValue: 'team.workspace',
         );
 
-    final platforms =
-        argResults?[_argKeyPlatforms] as String? ??
-        logger.chooseAnyEnumAsString(
-          message: 'What are your supported platforms?',
-          values: AppPlatform.values,
-          nameBuilder: (value) => value.name,
-          defaultValues: [
-            AppPlatform.android,
-            AppPlatform.ios,
-            AppPlatform.web,
-          ],
-        );
+    final platformValues =
+        (argResults?[_argKeyPlatforms] as String?)
+            ?.split(',')
+            .map((name) => AppPlatform.values.byNameOrNull(name.trim()))
+            .nonNulls
+            .toList() ??
+        [];
+    final platforms = platformValues.isNotEmpty
+        ? platformValues
+        : logger.chooseAnyEnum(
+            message: 'Supported platforms:',
+            values: AppPlatform.values,
+            defaultValues: [
+              AppPlatform.android,
+              AppPlatform.ios,
+              AppPlatform.web,
+            ],
+          );
 
     logger.info('🚀 Creating an app...');
     logger.detail('Name         : $name');
@@ -153,7 +158,7 @@ final class CreateAppCommand extends Command<void> {
     logger.detail('Platforms    : $platforms');
 
     return _Args(
-      template: template.name,
+      template: template,
       name: name,
       org: org,
       platforms: platforms,

@@ -17,32 +17,13 @@ extension LoggerPromptX on Logger {
   List<T> chooseAnyEnum<T extends Enum>({
     required String message,
     required List<T> values,
-    required String Function(T value) nameBuilder,
     required List<T> defaultValues,
   }) {
-    final selectedNames = chooseAny(
+    return chooseAny(
       message,
-      choices: values.map(nameBuilder).toList(),
-      defaultValues: defaultValues.map(nameBuilder).toList(),
+      choices: values,
+      defaultValues: defaultValues,
+      display: (choice) => choice.name,
     );
-
-    return values
-        .where((value) => selectedNames.contains(nameBuilder(value)))
-        .toList();
-  }
-
-  String chooseAnyEnumAsString<T extends Enum>({
-    required String message,
-    required List<T> values,
-    required String Function(T value) nameBuilder,
-    required List<T> defaultValues,
-  }) {
-    final selected = chooseAny(
-      message,
-      choices: values.map(nameBuilder).toList(),
-      defaultValues: defaultValues.map(nameBuilder).toList(),
-    );
-
-    return selected.join(',');
   }
 }
