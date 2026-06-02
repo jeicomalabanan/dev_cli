@@ -10,3 +10,4 @@ bootstrap:
 
 bundle:
 	mason bundle bricks/app -t dart -o lib/bundles
+	mason bundle bricks/monorepo -t dart -o lib/bundles

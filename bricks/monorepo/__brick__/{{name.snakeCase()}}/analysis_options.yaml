@@ -1,8 +1,11 @@
-include: package:lints/recommended.yaml
+include: package:flutter_lints/flutter.yaml
 
 analyzer:
   exclude:
-    - bricks/**/__brick__/**
+    - apps/**/*.config.dart
+    - apps/**/*.g.dart
+    - packages/**/*.config.dart
+    - packages/**/*.g.dart
 
 linter:
   rules:

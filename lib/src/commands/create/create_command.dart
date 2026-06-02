@@ -6,15 +6,17 @@ import 'create_monorepo_command.dart';
 import 'create_package_command.dart';
 
 final class CreateCommand extends Command<void> {
-  CreateCommand(Logger logger) {
+  CreateCommand(this.logger) {
     addSubcommand(CreateMonorepoCommand(logger));
     addSubcommand(CreatePackageCommand(logger));
     addSubcommand(CreateAppCommand(logger));
   }
 
+  final Logger logger;
+
   @override
   String get name => 'create';
 
   @override
-  String get description => 'Create resources from templates.';
+  String get description => 'Create resources from bricks.';
 }

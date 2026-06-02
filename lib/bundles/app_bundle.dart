@@ -3,4 +3,4 @@
 
 import 'package:mason/mason.dart';
 
-final appBundle = MasonBundle.fromJson(<String, dynamic>{"files":[{"path":"README.md","data":"IyB0aGlzIGlzIHRoZSB7e25hbWV9fQ==","type":"text"}],"hooks":[],"name":"app","description":"A new brick created with the Mason CLI.","version":"0.1.0+1","environment":{"mason":"^0.1.2"},"vars":{"name":{"type":"string","description":"Name of the app.","prompt":"What is the name of the app?"}}});
+final appBundle = MasonBundle.fromJson(<String, dynamic>{"files":[{"path":"README.md","data":"IyB7e25hbWV9fQ==","type":"text"}],"hooks":[],"name":"app","description":"A new brick created with the Mason CLI.","version":"0.1.0+1","environment":{"mason":"^0.1.2"},"vars":{"name":{"type":"string","description":"Name of the app.","prompt":"What is the name of the app?"}}});

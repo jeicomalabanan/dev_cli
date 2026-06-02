@@ -1,17 +1,18 @@
 import 'dart:async';
 import 'dart:io';
-import 'dart:isolate';
 
 import 'package:args/command_runner.dart';
 import 'package:mason/mason.dart';
-import 'package:path/path.dart' as p;
+import 'package:path/path.dart' as path;
 
-import '../../utils/process_runner.dart';
+import '../../../bundles/monorepo_bundle.dart';
 
 final class CreateMonorepoCommand extends Command<void> {
   CreateMonorepoCommand(this.logger) {
-    argParser.addOption('name', abbr: 'n', help: 'Name of the monorepo.');
+    argParser.addOption(_argName, abbr: 'n', help: 'Name of the monorepo.');
   }
+
+  static const _argName = 'name';
 
   final Logger logger;
 
@@ -24,71 +25,29 @@ final class CreateMonorepoCommand extends Command<void> {
   @override
   FutureOr<void>? run() async {
     final name =
-        argResults?['name'] as String? ??
+        argResults?[_argName] as String? ??
         logger.prompt('What is the name of the monorepo?');
 
-    logger.info('Creating monorepo...');
+    logger.info('🚀 Creating monorepo...');
     logger.detail('Name: $name');
 
-    var currentPath = Directory.current.path;
-    print('current path: $currentPath');
-    print('Platform.script: ${Platform.script}');
-    print('package root: $packageRoot');
-    final brickPath = p.join(
-      packageRoot,
-      'packages',
-      'mason_util',
-      'bricks',
-      'monorepo',
-    );
-    print('brick path: $brickPath');
+    final currentDir = Directory.current.path;
+    final monorepoDir = path.join(currentDir, name);
 
-    final uri = await Isolate.resolvePackageUri(
-      Uri.parse('package:dev_cli/packages/mason_util/mason.yaml'),
-    );
-    print('uri: $uri');
-
-    // _runMasonTest(name: name, outputDir: currentPath);
-
-    logger.success('Monorepo "$name" created successfully.');
-  }
-
-  void _runMason({required String name, required String outputDir}) {
-    final result = ProcessRunner.run(
-      command: 'mason',
-      args: ['make', 'monorepo', '-o', outputDir, '--name', name],
-      workingDirectory: '../../../../packages/mason_util',
-    );
-
-    if (result.stdout.toString().isNotEmpty) {
-      logger.info(result.stdout.toString());
+    // check if monorepo already exists
+    if (Directory(monorepoDir).existsSync()) {
+      logger.err('Monorepo "$name" already exists at $monorepoDir');
+      exit(1);
     }
 
-    if (result.stderr.toString().isNotEmpty) {
-      logger.err(result.stderr.toString());
-    }
-
-    if (result.exitCode != 0) {
-      throw Exception('Mason command failed');
-    }
-  }
-
-  Future<void> _runMasonTest({
-    required String name,
-    required String outputDir,
-  }) async {
-    final generator = await MasonGenerator.fromBrick(
-      Brick.path('$packageRoot/packages/mason_util/bricks/monorepo'),
-    );
+    // generate monorepo template from mason bricks
+    final generator = await MasonGenerator.fromBundle(monorepoBundle);
     await generator.generate(
-      DirectoryGeneratorTarget(Directory('apps/$name')),
-      vars: {'name': name},
+      DirectoryGeneratorTarget(Directory(currentDir)),
+      vars: {_argName: name},
+      fileConflictResolution: FileConflictResolution.overwrite,
     );
-  }
 
-  String get packageRoot {
-    return p.normalize(
-      p.join(File(Platform.script.toFilePath()).parent.path, '..'),
-    );
+    logger.success('✅ Monorepo "$name" created successfully.');
   }
 }
