@@ -27,12 +27,11 @@ final class ProcessRunner {
       args: [
         'create',
         '--template=app',
-        name,
+        '$workingDirectory/$name',
         '--org=$org',
         '--platforms=$platforms',
         '--empty',
       ],
-      workingDirectory: workingDirectory,
     );
   }
 

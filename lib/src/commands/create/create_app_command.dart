@@ -152,7 +152,7 @@ final class CreateAppCommand extends Command<void> {
     logger.info('🚀 Creating an app...');
     logger.detail('Name         : $name');
     logger.detail('Organization : $org');
-    logger.detail('Platforms    : $platforms');
+    logger.detail('Platforms    : ${platforms.map((e) => e.name).join(',')}');
 
     return _Args(
       template: template,
