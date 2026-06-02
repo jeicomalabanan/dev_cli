@@ -15,4 +15,46 @@ final class ProcessRunner {
       runInShell: true,
     );
   }
+
+  static ProcessResult createFlutterApp({
+    required String appName,
+    required String org,
+    required String platforms,
+    required String workingDirectory,
+  }) {
+    return run(
+      command: 'flutter',
+      args: [
+        'create',
+        '--template=app',
+        appName,
+        '--org=$org',
+        '--platforms=$platforms',
+        '--empty',
+      ],
+      workingDirectory: workingDirectory,
+    );
+  }
+
+  static ProcessResult createFlutterPackage({
+    required String packageName,
+    required String workingDirectory,
+  }) {
+    return run(
+      command: 'flutter',
+      args: ['create', '--template=package', packageName],
+      workingDirectory: workingDirectory,
+    );
+  }
+
+  static ProcessResult createDartPackage({
+    required String packageName,
+    required String workingDirectory,
+  }) {
+    return run(
+      command: 'dart',
+      args: ['create', '--template=package', packageName],
+      workingDirectory: workingDirectory,
+    );
+  }
 }
