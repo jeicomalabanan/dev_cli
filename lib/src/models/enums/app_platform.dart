@@ -9,4 +9,13 @@ extension AppPlatformX on AppPlatform {
     AppPlatform.linux => 'linux',
     AppPlatform.macos => 'macos',
   };
+
+  String get description => switch (this) {
+    AppPlatform.android => '',
+    AppPlatform.ios => '',
+    AppPlatform.web => '',
+    AppPlatform.windows => '',
+    AppPlatform.linux => '',
+    AppPlatform.macos => '',
+  };
 }

@@ -4,28 +4,43 @@ extension LoggerPromptX on Logger {
   T chooseOneEnum<T extends Enum>({
     required String message,
     required List<T> values,
-    required String Function(T value) labelBuilder,
     required T defaultValue,
   }) {
-    final selected = chooseOne(
+    return chooseOne(
       message,
-      choices: values.map(labelBuilder).toList(),
-      defaultValue: labelBuilder(defaultValue),
+      choices: values,
+      defaultValue: defaultValue,
+      display: (choice) => choice.name,
     );
-
-    return values.firstWhere((value) => labelBuilder(value) == selected);
   }
 
-  String chooseAnyEnum<T extends Enum>({
+  List<T> chooseAnyEnum<T extends Enum>({
     required String message,
     required List<T> values,
-    required String Function(T value) labelBuilder,
+    required String Function(T value) nameBuilder,
+    required List<T> defaultValues,
+  }) {
+    final selectedNames = chooseAny(
+      message,
+      choices: values.map(nameBuilder).toList(),
+      defaultValues: defaultValues.map(nameBuilder).toList(),
+    );
+
+    return values
+        .where((value) => selectedNames.contains(nameBuilder(value)))
+        .toList();
+  }
+
+  String chooseAnyEnumAsString<T extends Enum>({
+    required String message,
+    required List<T> values,
+    required String Function(T value) nameBuilder,
     required List<T> defaultValues,
   }) {
     final selected = chooseAny(
       message,
-      choices: values.map(labelBuilder).toList(),
-      defaultValues: defaultValues.map(labelBuilder).toList(),
+      choices: values.map(nameBuilder).toList(),
+      defaultValues: defaultValues.map(nameBuilder).toList(),
     );
 
     return selected.join(',');
