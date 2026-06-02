@@ -110,9 +110,9 @@ final class CreateAppCommand extends Command<void> {
         );
 
     logger.info('🚀 Creating an app...');
-    logger.detail('Name: $name');
-    logger.detail('Org: $org');
-    logger.detail('Platforms: $platforms');
+    logger.detail('Name         : $name');
+    logger.detail('Organization : $org');
+    logger.detail('Platforms    : $platforms');
 
     final shouldProceed = logger.confirm('Do you want to proceed?');
     if (shouldProceed) {
