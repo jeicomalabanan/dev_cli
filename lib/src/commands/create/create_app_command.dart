@@ -79,6 +79,7 @@ final class CreateAppCommand extends Command<void> {
       DirectoryGeneratorTarget(Directory(appDir)),
       vars: {_argName: name},
       fileConflictResolution: FileConflictResolution.overwrite,
+      logger: logger,
     );
 
     logger.success('✅ App "${appArgs.name}" created successfully.');
