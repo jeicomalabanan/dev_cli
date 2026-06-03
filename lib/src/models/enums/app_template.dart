@@ -1,13 +1,13 @@
-enum AppTemplate { basic, monorepo }
+enum AppTemplate { monorepo, basic }
 
 extension AppTemplateX on AppTemplate {
   String get label => switch (this) {
-    AppTemplate.basic => 'Basic',
     AppTemplate.monorepo => 'Monorepo',
+    AppTemplate.basic => 'Basic',
   };
 
   String get description => switch (this) {
-    AppTemplate.basic => '',
     AppTemplate.monorepo => '',
+    AppTemplate.basic => '',
   };
 }

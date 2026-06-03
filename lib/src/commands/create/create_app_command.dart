@@ -86,6 +86,15 @@ final class CreateAppCommand extends Command<void> {
       return;
     }
 
+    switch (args.template) {
+      case AppTemplate.basic:
+        _generateBasicApp();
+        break;
+      case AppTemplate.monorepo:
+        _generateMonorepoApp();
+        break;
+    }
+
     // create flutter application
     final result = ProcessRunner.createFlutterApp(
       name: args.name,
@@ -159,4 +168,8 @@ final class CreateAppCommand extends Command<void> {
       platforms: platforms,
     );
   }
+
+  void _generateBasicApp() {}
+
+  void _generateMonorepoApp() {}
 }
