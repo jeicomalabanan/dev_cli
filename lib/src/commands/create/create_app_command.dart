@@ -92,7 +92,7 @@ final class CreateAppCommand extends Command<void> {
       return;
     }
 
-    ProcessRunner.run(
+    final result = ProcessRunner.run(
       command: 'flutter',
       args: [
         'create',
@@ -102,6 +102,11 @@ final class CreateAppCommand extends Command<void> {
         '--platforms=${args.platforms}',
       ],
     );
+
+    logger.info('--> ${result.stdout}');
+    if (result.exitCode != 0) {
+      logger.err(result.stderr);
+    }
   }
 
   void _generateMonorepoApp() {
