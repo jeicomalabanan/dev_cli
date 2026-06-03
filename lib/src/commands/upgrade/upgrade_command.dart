@@ -1,9 +1,8 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:args/command_runner.dart';
 import 'package:mason/mason.dart';
-
-import '../../utils/process_runner.dart';
 
 final class UpgradeCommand extends Command<void> {
   UpgradeCommand(this.logger);
@@ -20,19 +19,30 @@ final class UpgradeCommand extends Command<void> {
   FutureOr<void>? run() async {
     final progress = logger.progress('Checking for updates...');
 
-    final result = ProcessRunner.run(
-      command: 'dart',
-      args: [
-        'pub',
-        'global',
-        'activate',
-        '--source',
-        'git',
-        'https://github.com/jeicomalabanan/dev_cli',
-        '--git-ref',
-        'develop',
-      ],
-    );
+    final result = await Process.run('dart', [
+      'pub',
+      'global',
+      'activate',
+      '--source',
+      'git',
+      'https://github.com/jeicomalabanan/dev_cli',
+      '--git-ref',
+      'develop',
+    ], runInShell: true);
+
+    // final result = ProcessRunner.run(
+    //   command: 'dart',
+    //   args: [
+    //     'pub',
+    //     'global',
+    //     'activate',
+    //     '--source',
+    //     'git',
+    //     'https://github.com/jeicomalabanan/dev_cli',
+    //     '--git-ref',
+    //     'develop',
+    //   ],
+    // );
 
     if (result.exitCode != 0) {
       progress.fail(result.stderr);
