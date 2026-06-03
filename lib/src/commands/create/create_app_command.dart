@@ -42,6 +42,12 @@ final class CreateAppCommand extends Command<void> {
 
     final progress = logger.progress('Creating app...');
 
+    final currentDir = Directory.current.path;
+    final subDir = path.join(currentDir, 'apps');
+    final appDir = path.join(subDir, 'user_app');
+
+    final targetDir = appDir;
+
     switch (args.template) {
       case AppTemplate.basic:
         _generateBasicApp(currentDir: Directory.current.path, args: args);
@@ -84,7 +90,10 @@ final class CreateAppCommand extends Command<void> {
     );
   }
 
-  void _generateBasicApp({required String currentDir, required _Args args}) {
+  void _generateBasicApp({
+    required String currentDir,
+    required _Args args,
+  }) async {
     final appDir = path.join(currentDir, args.name);
 
     // check if app already exists
@@ -93,7 +102,7 @@ final class CreateAppCommand extends Command<void> {
       return;
     }
 
-    final result = ProcessRunner.runSync(
+    final result = await ProcessRunner.run(
       command: 'flutter',
       args: [
         'create',
@@ -104,9 +113,14 @@ final class CreateAppCommand extends Command<void> {
       ],
     );
 
-    if (result.exitCode != 0) {
-      // progress.fail(result.stderr);
-    } else {}
+    // if (result.exitCode != 0) {
+    //   throw ProcessException(
+    //     command,
+    //     args,
+    //     result.stderr.toString(),
+    //     result.exitCode,
+    //   );
+    // }
   }
 
   void _generateMonorepoApp() {

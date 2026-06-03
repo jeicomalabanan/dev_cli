@@ -34,6 +34,12 @@ final class UpgradeCommand extends Command<void> {
       ],
     );
 
+    progress.update('Installing dependencies...');
+    await Future.delayed(const Duration(milliseconds: 1000));
+
+    progress.update('Running build_runner...');
+    await Future.delayed(const Duration(milliseconds: 1000));
+
     if (result.exitCode != 0) {
       progress.fail(result.stderr);
     } else {
