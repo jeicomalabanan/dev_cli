@@ -48,8 +48,6 @@ final class CreateAppCommand extends Command<void> {
         _generateMonorepoApp();
         break;
     }
-
-    logger.success('✅ "${args.name}" created successfully.');
   }
 
   _Args? _promptArgs() {
@@ -92,6 +90,8 @@ final class CreateAppCommand extends Command<void> {
       return;
     }
 
+    final progress = logger.progress('Creating Flutter app...');
+
     final result = ProcessRunner.run(
       command: 'flutter',
       args: [
@@ -104,13 +104,25 @@ final class CreateAppCommand extends Command<void> {
     );
 
     if (result.exitCode != 0) {
-      logger.err(result.stderr);
+      progress.fail(result.stderr);
     } else {
-      logger.info('--> ${result.stdout}');
+      progress.complete(result.stdout);
     }
   }
 
   void _generateMonorepoApp() {
+    // final progress = logger.progress('Creating app...');
+    //
+    // await createApp();
+    //
+    // progress.update('Installing dependencies...');
+    // await installDependencies();
+    //
+    // progress.update('Running build_runner...');
+    // await runBuildRunner();
+    //
+    // progress.complete('Done');
+
     // // create flutter application
     // final result = ProcessRunner.createFlutterApp(
     //   name: args.name,
