@@ -93,7 +93,7 @@ final class CreateAppCommand extends Command<void> {
       return;
     }
 
-    final result = ProcessRunner.run(
+    final result = ProcessRunner.runSync(
       command: 'flutter',
       args: [
         'create',

@@ -3,7 +3,20 @@ import 'dart:io';
 final class ProcessRunner {
   ProcessRunner._();
 
-  static ProcessResult run({
+  static Future<ProcessResult> run({
+    required String command,
+    required List<String> args,
+    String? workingDirectory,
+  }) {
+    return Process.run(
+      command,
+      args,
+      workingDirectory: workingDirectory,
+      runInShell: true,
+    );
+  }
+
+  static ProcessResult runSync({
     required String command,
     required List<String> args,
     String? workingDirectory,
@@ -22,7 +35,7 @@ final class ProcessRunner {
     required String platforms,
     String? targetDirectory,
   }) {
-    return run(
+    return runSync(
       command: 'flutter',
       args: [
         'create',
@@ -39,7 +52,7 @@ final class ProcessRunner {
     required String packageName,
     String? workingDirectory,
   }) {
-    return run(
+    return runSync(
       command: 'flutter',
       args: ['create', '--template=package', packageName],
       workingDirectory: workingDirectory,
@@ -50,7 +63,7 @@ final class ProcessRunner {
     required String packageName,
     String? workingDirectory,
   }) {
-    return run(
+    return runSync(
       command: 'dart',
       args: ['create', '--template=package', packageName],
       workingDirectory: workingDirectory,
