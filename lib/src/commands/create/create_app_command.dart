@@ -90,7 +90,7 @@ final class CreateAppCommand extends Command<void> {
       return;
     }
 
-    final progress = logger.progress('Creating Flutter app...');
+    final progress = logger.progress('Creating app...');
 
     final result = ProcessRunner.run(
       command: 'flutter',
@@ -106,7 +106,8 @@ final class CreateAppCommand extends Command<void> {
     if (result.exitCode != 0) {
       progress.fail(result.stderr);
     } else {
-      progress.complete(result.stdout);
+      // progress.complete(result.stdout);
+      progress.complete('App created.');
     }
   }
 
