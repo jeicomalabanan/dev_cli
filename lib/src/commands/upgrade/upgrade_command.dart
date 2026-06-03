@@ -18,7 +18,7 @@ final class UpgradeCommand extends Command<void> {
 
   @override
   FutureOr<void>? run() async {
-    logger.info('🚀 Checking for updates...');
+    final progress = logger.progress('Checking for updates...');
 
     final result = ProcessRunner.run(
       command: 'dart',
@@ -35,10 +35,9 @@ final class UpgradeCommand extends Command<void> {
     );
 
     if (result.exitCode != 0) {
-      logger.err(result.stderr);
-      return;
+      progress.fail(result.stderr);
+    } else {
+      progress.complete('Dev CLI upgraded successfully.');
     }
-
-    logger.success('✅ Dev CLI upgraded successfully.');
   }
 }
