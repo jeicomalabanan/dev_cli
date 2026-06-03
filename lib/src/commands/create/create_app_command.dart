@@ -40,6 +40,8 @@ final class CreateAppCommand extends Command<void> {
     final args = _promptArgs();
     if (args == null) return;
 
+    final progress = logger.progress('Creating app...');
+
     switch (args.template) {
       case AppTemplate.basic:
         _generateBasicApp(currentDir: Directory.current.path, args: args);
@@ -48,6 +50,8 @@ final class CreateAppCommand extends Command<void> {
         _generateMonorepoApp();
         break;
     }
+
+    progress.complete('${args.name} created.');
   }
 
   _Args? _promptArgs() {
@@ -67,7 +71,6 @@ final class CreateAppCommand extends Command<void> {
       defaultValues: [AppPlatform.android, AppPlatform.ios, AppPlatform.web],
     );
 
-    logger.info('🚀 Creating an app...');
     logger.detail('Template     : ${template.name}');
     logger.detail('Name         : $name');
     logger.detail('Organization : $org');
@@ -90,8 +93,6 @@ final class CreateAppCommand extends Command<void> {
       return;
     }
 
-    final progress = logger.progress('Creating app...');
-
     final result = ProcessRunner.run(
       command: 'flutter',
       args: [
@@ -104,11 +105,8 @@ final class CreateAppCommand extends Command<void> {
     );
 
     if (result.exitCode != 0) {
-      progress.fail(result.stderr);
-    } else {
-      // progress.complete(result.stdout);
-      progress.complete('App created.');
-    }
+      // progress.fail(result.stderr);
+    } else {}
   }
 
   void _generateMonorepoApp() {
