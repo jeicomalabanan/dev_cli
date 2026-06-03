@@ -99,13 +99,14 @@ final class CreateAppCommand extends Command<void> {
         '--template=app',
         args.name,
         '--org=${args.org}',
-        '--platforms=${args.platforms}',
+        '--platforms=${args.platforms.map((e) => e.name).join(',')}',
       ],
     );
 
-    logger.info('--> ${result.stdout}');
     if (result.exitCode != 0) {
       logger.err(result.stderr);
+    } else {
+      logger.info('--> ${result.stdout}');
     }
   }
 
