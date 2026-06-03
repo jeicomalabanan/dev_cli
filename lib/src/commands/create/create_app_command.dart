@@ -94,7 +94,7 @@ final class CreateAppCommand extends Command<void> {
     required String currentDir,
     required _Args args,
   }) async {
-    final appDir = path.join(currentDir, args.name);
+    final appDir = path.join(currentDir, 'apps', args.name);
 
     // check if app already exists
     if (Directory(appDir).existsSync()) {
@@ -107,7 +107,7 @@ final class CreateAppCommand extends Command<void> {
       args: [
         'create',
         '--template=app',
-        args.name,
+        appDir,
         '--org=${args.org}',
         '--platforms=${args.platforms.map((e) => e.name).join(',')}',
       ],
