@@ -6,6 +6,7 @@ import 'package:mason/mason.dart';
 import 'package:path/path.dart' as path;
 
 import '../../../bundles/app_bundle.dart';
+import '../../exceptions/cli_exception.dart';
 import '../../extensions/logger_extensions.dart';
 import '../../models/enums/app_platform.dart';
 import '../../models/enums/app_template.dart';
@@ -47,19 +48,21 @@ final class CreateAppCommand extends Command<void> {
     try {
       switch (args.template) {
         case AppTemplate.monorepo:
-          _generateMonorepoApp(
+          await _generateMonorepoApp(
             appDir: path.join(Directory.current.path, 'apps', args.appName),
             args: args,
           );
           break;
         case AppTemplate.basic:
-          _generateBasicApp(
+          await _generateBasicApp(
             appDir: path.join(Directory.current.path, args.appName),
             args: args,
           );
           break;
       }
       progress.complete('${args.appName} created successfully.');
+    } on CliException catch (e) {
+      progress.fail(e.message);
     } catch (e) {
       progress.fail(e.toString());
     }
@@ -96,7 +99,7 @@ final class CreateAppCommand extends Command<void> {
   }) async {
     // check if app already exists
     if (Directory(appDir).existsSync()) {
-      throw Exception('"${args.appName}" already exists at $appDir');
+      throw CliException('"${args.appName}" already exists at $appDir');
     }
 
     // create app
@@ -112,7 +115,7 @@ final class CreateAppCommand extends Command<void> {
     );
 
     if (result.exitCode != 0) {
-      throw Exception(result.stderr.toString());
+      throw CliException(result.stderr.toString());
     }
   }
 

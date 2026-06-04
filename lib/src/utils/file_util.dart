@@ -6,17 +6,21 @@ final class FileUtil {
   static Future<void> deletePath(String path) async {
     if (path.isEmpty) return;
 
-    final entity = FileSystemEntity.typeSync(path);
+    try {
+      final entity = FileSystemEntity.typeSync(path);
 
-    switch (entity) {
-      case FileSystemEntityType.file:
-        await File(path).delete();
-        break;
-      case FileSystemEntityType.directory:
-        await Directory(path).delete(recursive: true);
-        break;
-      default:
-        break;
+      switch (entity) {
+        case FileSystemEntityType.file:
+          await File(path).delete();
+          break;
+        case FileSystemEntityType.directory:
+          await Directory(path).delete(recursive: true);
+          break;
+        default:
+          break;
+      }
+    } catch (e) {
+      print(e);
     }
   }
 
