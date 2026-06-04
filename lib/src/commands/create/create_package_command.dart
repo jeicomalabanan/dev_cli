@@ -49,7 +49,7 @@ final class CreatePackageCommand extends Command<void> {
           );
           break;
       }
-      progress.complete('Feature "${args.packageName}" created successfully.');
+      progress.complete('Package "${args.packageName}" created successfully.');
     } on CliException catch (e) {
       progress.fail(e.message);
     } catch (e) {

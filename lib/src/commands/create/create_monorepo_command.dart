@@ -6,19 +6,10 @@ import 'package:mason/mason.dart';
 import 'package:path/path.dart' as path;
 
 import '../../../bundles/monorepo_bundle.dart';
-
-const _argKeyName = 'name';
-
-final class _Args {
-  const _Args({required this.name});
-
-  final String name;
-}
+import '../../exceptions/cli_exception.dart';
 
 final class CreateMonorepoCommand extends Command<void> {
-  CreateMonorepoCommand(this.logger) {
-    argParser.addOption(_argKeyName, help: 'Name of the monorepo.');
-  }
+  CreateMonorepoCommand(this.logger);
 
   final Logger logger;
 
@@ -33,34 +24,55 @@ final class CreateMonorepoCommand extends Command<void> {
     final args = _promptArgs();
     if (args == null) return;
 
-    final currentDir = Directory.current.path;
-    final monorepoDir = path.join(currentDir, args.name);
+    final progress = logger.progress('Creating monorepo');
 
-    // check if monorepo already exists
-    if (Directory(monorepoDir).existsSync()) {
-      logger.err('"${args.name}" already exists at $monorepoDir');
-      return;
+    try {
+      await _createMonorepo(
+        monorepoDir: path.join(Directory.current.path, args.monorepoName),
+        args: args,
+      );
+      progress.complete(
+        'Monorepo "${args.monorepoName}" created successfully.',
+      );
+    } on CliException catch (e) {
+      progress.fail(e.message);
+    } catch (e) {
+      progress.fail(e.toString());
     }
-
-    // generate monorepo from mason bricks
-    final generator = await MasonGenerator.fromBundle(monorepoBundle);
-    await generator.generate(
-      DirectoryGeneratorTarget(Directory(monorepoDir)),
-      vars: {_argKeyName: args.name},
-      fileConflictResolution: FileConflictResolution.overwrite,
-    );
-
-    logger.success('✅ "${args.name}" created successfully.');
   }
 
   _Args? _promptArgs() {
-    final name =
-        argResults?[_argKeyName] as String? ??
-        logger.prompt('What is the name of the monorepo?');
+    final monorepoName = logger.prompt(
+      'Name of the monorepo:',
+      defaultValue: 'workspace',
+    );
 
-    logger.info('🚀 Creating monorepo...');
-    logger.detail('Name: $name');
-
-    return _Args(name: name);
+    return _Args(monorepoName: monorepoName);
   }
+
+  Future<void> _createMonorepo({
+    required String monorepoDir,
+    required _Args args,
+  }) async {
+    // check if monorepo already exists
+    if (Directory(monorepoDir).existsSync()) {
+      throw CliException(
+        '"${args.monorepoName}" already exists at $monorepoDir',
+      );
+    }
+
+    // generate monorepo
+    final generator = await MasonGenerator.fromBundle(monorepoBundle);
+    await generator.generate(
+      DirectoryGeneratorTarget(Directory(monorepoDir)),
+      vars: {'name': args.monorepoName},
+      fileConflictResolution: FileConflictResolution.overwrite,
+    );
+  }
+}
+
+final class _Args {
+  const _Args({required this.monorepoName});
+
+  final String monorepoName;
 }
