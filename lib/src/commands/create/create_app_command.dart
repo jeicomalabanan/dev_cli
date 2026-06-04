@@ -5,21 +5,23 @@ import 'package:args/command_runner.dart';
 import 'package:mason/mason.dart';
 import 'package:path/path.dart' as path;
 
+import '../../../bundles/app_bundle.dart';
 import '../../extensions/logger_extensions.dart';
 import '../../models/enums/app_platform.dart';
 import '../../models/enums/app_template.dart';
+import '../../utils/file_util.dart';
 import '../../utils/process_runner.dart';
 
 final class _Args {
   const _Args({
     required this.template,
-    required this.name,
+    required this.appName,
     required this.org,
     required this.platforms,
   });
 
   final AppTemplate template;
-  final String name;
+  final String appName;
   final String org;
   final List<AppPlatform> platforms;
 }
@@ -40,24 +42,27 @@ final class CreateAppCommand extends Command<void> {
     final args = _promptArgs();
     if (args == null) return;
 
-    final progress = logger.progress('Creating app...');
+    final progress = logger.progress('Creating app');
 
-    final currentDir = Directory.current.path;
-    final subDir = path.join(currentDir, 'apps');
-    final appDir = path.join(subDir, 'user_app');
-
-    final targetDir = appDir;
-
-    switch (args.template) {
-      case AppTemplate.basic:
-        _generateBasicApp(currentDir: Directory.current.path, args: args);
-        break;
-      case AppTemplate.monorepo:
-        _generateMonorepoApp();
-        break;
+    try {
+      switch (args.template) {
+        case AppTemplate.monorepo:
+          _generateMonorepoApp(
+            appDir: path.join(Directory.current.path, 'apps', args.appName),
+            args: args,
+          );
+          break;
+        case AppTemplate.basic:
+          _generateBasicApp(
+            appDir: path.join(Directory.current.path, args.appName),
+            args: args,
+          );
+          break;
+      }
+      progress.complete('${args.appName} created successfully.');
+    } catch (e) {
+      progress.fail(e.toString());
     }
-
-    progress.complete('${args.name} created.');
   }
 
   _Args? _promptArgs() {
@@ -67,7 +72,7 @@ final class CreateAppCommand extends Command<void> {
       defaultValue: AppTemplate.monorepo,
     );
 
-    final name = logger.prompt('Name of the app:', defaultValue: 'user_app');
+    final appName = logger.prompt('Name of the app:', defaultValue: 'user_app');
 
     final org = logger.prompt('Organization:', defaultValue: 'team.workspace');
 
@@ -77,31 +82,24 @@ final class CreateAppCommand extends Command<void> {
       defaultValues: [AppPlatform.android, AppPlatform.ios, AppPlatform.web],
     );
 
-    logger.detail('Template     : ${template.name}');
-    logger.detail('Name         : $name');
-    logger.detail('Organization : $org');
-    logger.detail('Platforms    : ${platforms.map((e) => e.name).join(',')}');
-
     return _Args(
       template: template,
-      name: name,
+      appName: appName,
       org: org,
       platforms: platforms,
     );
   }
 
-  void _generateBasicApp({
-    required String currentDir,
+  Future<void> _generateBasicApp({
+    required String appDir,
     required _Args args,
   }) async {
-    final appDir = path.join(currentDir, 'apps', args.name);
-
     // check if app already exists
     if (Directory(appDir).existsSync()) {
-      logger.err('"${args.name}" already exists at $appDir');
-      return;
+      throw Exception('"${args.appName}" already exists at $appDir');
     }
 
+    // create app
     final result = await ProcessRunner.run(
       command: 'flutter',
       args: [
@@ -113,50 +111,31 @@ final class CreateAppCommand extends Command<void> {
       ],
     );
 
-    // if (result.exitCode != 0) {
-    //   throw ProcessException(
-    //     command,
-    //     args,
-    //     result.stderr.toString(),
-    //     result.exitCode,
-    //   );
-    // }
+    if (result.exitCode != 0) {
+      throw Exception(result.stderr.toString());
+    }
   }
 
-  void _generateMonorepoApp() {
-    // final progress = logger.progress('Creating app...');
-    //
-    // await createApp();
-    //
-    // progress.update('Installing dependencies...');
-    // await installDependencies();
-    //
-    // progress.update('Running build_runner...');
-    // await runBuildRunner();
-    //
-    // progress.complete('Done');
+  Future<void> _generateMonorepoApp({
+    required String appDir,
+    required _Args args,
+  }) async {
+    await _generateBasicApp(appDir: appDir, args: args);
 
-    // // create flutter application
-    // final result = ProcessRunner.createFlutterApp(
-    //   name: args.name,
-    //   org: args.org,
-    //   platforms: args.platforms.map((e) => e.name).join(','),
-    //   targetDirectory: appsDir,
-    // );
-    // if (result.exitCode != 0) {
-    //   logger.err(result.stderr);
-    //   return;
-    // }
+    final pathsToDelete = [
+      '$appDir/lib',
+      '$appDir/lib1234',
+      '$appDir/test',
+      '$appDir/pubspec.yaml',
+    ];
+    await FileUtil.deletePaths(pathsToDelete);
 
-    // // final pathsToDelete = ['$targetDir/test', '$targetDir/pubspec.yaml'];
-    // // await FileUtil.deletePaths(pathsToDelete);
-    //
-    // // generate app from mason bricks
-    // final generator = await MasonGenerator.fromBundle(appBundle);
-    // await generator.generate(
-    //   DirectoryGeneratorTarget(Directory(appDir)),
-    //   vars: {_argKeyName: args.name},
-    //   fileConflictResolution: FileConflictResolution.overwrite,
-    // );
+    // generate app from mason bricks
+    final generator = await MasonGenerator.fromBundle(appBundle);
+    await generator.generate(
+      DirectoryGeneratorTarget(Directory(appDir)),
+      vars: {'name': args.appName},
+      fileConflictResolution: FileConflictResolution.overwrite,
+    );
   }
 }
