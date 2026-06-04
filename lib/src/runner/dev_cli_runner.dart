@@ -1,8 +1,6 @@
 import 'package:args/command_runner.dart';
 import 'package:mason/mason.dart';
 
-import '../commands/bootstrap/bootstrap_command.dart';
-import '../commands/clean/clean_command.dart';
 import '../commands/create/create_command.dart';
 import '../commands/upgrade/upgrade_command.dart';
 
@@ -19,10 +17,8 @@ final class DevCliRunner {
 
   void run(List<String> arguments) {
     final runner = CommandRunner<void>(executableName, description)
-      ..addCommand(BootstrapCommand(logger))
       ..addCommand(CreateCommand(logger))
-      ..addCommand(UpgradeCommand(logger))
-      ..addCommand(CleanCommand(logger));
+      ..addCommand(UpgradeCommand(logger));
 
     runner.run(arguments).catchError((error) {
       logger.err(error.toString());

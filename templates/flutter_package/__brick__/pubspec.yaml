@@ -1,0 +1,21 @@
+resolution: workspace
+name: {{package_name}}
+version: 1.0.0
+publish_to: 'none'
+
+environment:
+  sdk: ^3.12.0
+  flutter: ">=1.17.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  get_it: ^9.2.1
+  injectable: ^3.0.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+  build_runner: ^2.15.0
+  injectable_generator: ^3.0.2

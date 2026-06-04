@@ -57,6 +57,21 @@ final class CreateFeatureCommand extends Command<void> {
     }
   }
 
+  _Args? _promptArgs() {
+    final template = logger.chooseOneEnum(
+      message: 'Choose template:',
+      values: FeatureTemplate.values.toList(),
+      defaultValue: FeatureTemplate.monorepo,
+    );
+
+    final featureName = logger.prompt(
+      'Name of the feature:',
+      defaultValue: 'auth',
+    );
+
+    return _Args(template: template, featureName: featureName);
+  }
+
   Future<void> _createBasicFeature({
     required String featureDir,
     required _Args args,
@@ -101,21 +116,6 @@ final class CreateFeatureCommand extends Command<void> {
       vars: {'feature_name': args.featureName},
       fileConflictResolution: FileConflictResolution.overwrite,
     );
-  }
-
-  _Args? _promptArgs() {
-    final template = logger.chooseOneEnum(
-      message: 'Choose template:',
-      values: FeatureTemplate.values.toList(),
-      defaultValue: FeatureTemplate.monorepo,
-    );
-
-    final featureName = logger.prompt(
-      'Name of the feature:',
-      defaultValue: 'auth',
-    );
-
-    return _Args(template: template, featureName: featureName);
   }
 }
 
