@@ -1,5 +1,5 @@
 resolution: workspace
-name: {{package_name}}
+name: {{feature_name}}
 version: 1.0.0
 publish_to: none
 
