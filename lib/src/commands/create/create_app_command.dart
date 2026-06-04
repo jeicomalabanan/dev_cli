@@ -127,9 +127,10 @@ final class CreateAppCommand extends Command<void> {
 
     final pathsToDelete = [
       '$appDir/lib',
-      '$appDir/lib1234',
       '$appDir/test',
+      '$appDir/analysis_options.yaml',
       '$appDir/pubspec.yaml',
+      '$appDir/README.md',
     ];
     await FileUtil.deletePaths(pathsToDelete);
 
