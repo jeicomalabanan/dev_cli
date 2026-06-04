@@ -1,4 +1,4 @@
-name: app
+name: feature
 description: A new brick created with the Mason CLI.
 version: 0.0.1+1
 
@@ -6,6 +6,6 @@ environment:
   mason: ^0.1.2
 
 vars:
-  name:
+  feature_name:
     type: string
-    description: Name of the Flutter application.
+    description: Name of the feature.

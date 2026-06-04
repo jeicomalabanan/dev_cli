@@ -1,5 +1,5 @@
 resolution: workspace
-name: {{name}}
+name: {{app_name}}
 version: 1.0.0+1
 publish_to: none
 

@@ -5,6 +5,6 @@
 .dart_tool/
 
 # Local Mason Files
-bricks/**/.dart_tool/
-bricks/**/build/
-bricks/**/pubspec.lock
+templates/**/.dart_tool/
+templates/**/build/
+templates/**/pubspec.lock

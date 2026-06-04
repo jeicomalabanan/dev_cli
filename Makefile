@@ -9,5 +9,6 @@ bootstrap:
 	@echo "✅ Bootstrap complete"
 
 bundle:
-	mason bundle bricks/app -t dart -o lib/bundles
-	mason bundle bricks/monorepo -t dart -o lib/bundles
+	mason bundle templates/app -t dart -o lib/bundles
+	mason bundle templates/feature -t dart -o lib/bundles
+	mason bundle templates/monorepo -t dart -o lib/bundles

@@ -13,22 +13,8 @@ import '../../models/enums/app_template.dart';
 import '../../utils/file_util.dart';
 import '../../utils/process_runner.dart';
 
-final class _Args {
-  const _Args({
-    required this.template,
-    required this.appName,
-    required this.org,
-    required this.platforms,
-  });
-
-  final AppTemplate template;
-  final String appName;
-  final String org;
-  final List<AppPlatform> platforms;
-}
-
 final class CreateAppCommand extends Command<void> {
-  CreateAppCommand(this.logger) {}
+  CreateAppCommand(this.logger);
 
   final Logger logger;
 
@@ -36,7 +22,7 @@ final class CreateAppCommand extends Command<void> {
   String get name => 'app';
 
   @override
-  String get description => 'Create a new Flutter application.';
+  String get description => 'Create a new application.';
 
   @override
   FutureOr<void>? run() async {
@@ -48,19 +34,19 @@ final class CreateAppCommand extends Command<void> {
     try {
       switch (args.template) {
         case AppTemplate.monorepo:
-          await _generateMonorepoApp(
+          await _createMonorepoApp(
             appDir: path.join(Directory.current.path, 'apps', args.appName),
             args: args,
           );
           break;
         case AppTemplate.basic:
-          await _generateBasicApp(
+          await _createBasicApp(
             appDir: path.join(Directory.current.path, args.appName),
             args: args,
           );
           break;
       }
-      progress.complete('${args.appName} created successfully.');
+      progress.complete('App "${args.appName}" created successfully.');
     } on CliException catch (e) {
       progress.fail(e.message);
     } catch (e) {
@@ -93,7 +79,7 @@ final class CreateAppCommand extends Command<void> {
     );
   }
 
-  Future<void> _generateBasicApp({
+  Future<void> _createBasicApp({
     required String appDir,
     required _Args args,
   }) async {
@@ -119,11 +105,11 @@ final class CreateAppCommand extends Command<void> {
     }
   }
 
-  Future<void> _generateMonorepoApp({
+  Future<void> _createMonorepoApp({
     required String appDir,
     required _Args args,
   }) async {
-    await _generateBasicApp(appDir: appDir, args: args);
+    await _createBasicApp(appDir: appDir, args: args);
 
     final pathsToDelete = [
       '$appDir/lib',
@@ -134,12 +120,26 @@ final class CreateAppCommand extends Command<void> {
     ];
     await FileUtil.deletePaths(pathsToDelete);
 
-    // generate app from mason bricks
+    // generate app
     final generator = await MasonGenerator.fromBundle(appBundle);
     await generator.generate(
       DirectoryGeneratorTarget(Directory(appDir)),
-      vars: {'name': args.appName},
+      vars: {'app_name': args.appName},
       fileConflictResolution: FileConflictResolution.overwrite,
     );
   }
+}
+
+final class _Args {
+  const _Args({
+    required this.template,
+    required this.appName,
+    required this.org,
+    required this.platforms,
+  });
+
+  final AppTemplate template;
+  final String appName;
+  final String org;
+  final List<AppPlatform> platforms;
 }

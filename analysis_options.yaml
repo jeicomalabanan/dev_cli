@@ -2,7 +2,7 @@ include: package:lints/recommended.yaml
 
 analyzer:
   exclude:
-    - bricks/**/__brick__/**
+    - templates/**/__brick__/**
 
 linter:
   rules:
