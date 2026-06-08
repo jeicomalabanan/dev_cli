@@ -36,7 +36,7 @@ final class CreateFeatureCommand extends Command<void> {
           await _createMonorepoFeature(
             featureDir: path.join(
               Directory.current.path,
-              'packages/features',
+              'features',
               args.featureName,
             ),
             args: args,
