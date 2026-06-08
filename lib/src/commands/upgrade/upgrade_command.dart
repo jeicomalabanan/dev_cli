@@ -29,8 +29,8 @@ final class UpgradeCommand extends Command<void> {
         '--source',
         'git',
         'https://github.com/jeicomalabanan/dev_cli',
-        '--git-ref',
-        'develop',
+        // '--git-ref',
+        // 'develop',
       ],
     );
 
