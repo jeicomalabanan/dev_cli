@@ -18,7 +18,7 @@ final class UpgradeCommand extends Command<void> {
 
   @override
   FutureOr<void>? run() async {
-    final progress = logger.progress('Checking for updates...');
+    final progress = logger.progress('Checking for updates');
 
     final result = await ProcessRunner.run(
       command: 'dart',
