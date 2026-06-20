@@ -53,17 +53,17 @@ melos:
         build_runner: ^2.15.0
         injectable_generator: ^3.1.0
       hooks:
-        pre: echo '🚀 Bootstrapping workspace...'
-        post: echo '✅ Bootstrap done.'
+        pre: echo 'Bootstrapping workspace...'
+        post: echo 'Bootstrap done.'
     clean:
       hooks:
-        pre: echo '🚀 Cleaning workspace...'
+        pre: echo 'Cleaning workspace...'
         post: |
           melos di:clean
           find . -name 'pubspec.lock' -delete
           find . -name '*.config.dart' -delete
           find . -name 'Podfile.lock' -delete
-          echo '✅ Clean done.'
+          echo 'Clean done.'
 
   scripts:
     workspace:list:
