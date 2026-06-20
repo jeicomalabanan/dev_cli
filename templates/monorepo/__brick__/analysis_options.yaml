@@ -4,6 +4,8 @@ analyzer:
   exclude:
     - apps/**/*.config.dart
     - apps/**/*.g.dart
+    - features/**/*.config.dart
+    - features/**/*.g.dart
     - packages/**/*.config.dart
     - packages/**/*.g.dart
 

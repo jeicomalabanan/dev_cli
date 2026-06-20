@@ -1,5 +1,6 @@
 # Miscellaneous
 .DS_Store
+build/
 
 # IntelliJ related
 .idea/
@@ -15,4 +16,3 @@
 # Exclude generated files
 *.config.dart
 *.g.dart
-*.g.yaml
