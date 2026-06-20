@@ -4,6 +4,9 @@ import 'package:injectable/injectable.dart';
 import 'di.config.dart';
 
 @injectableInit
-Future<void> configureDependencies(GetIt getIt, Environment environment) async {
-  getIt.init(environment: environment.name);
+Future<void> configureDependencies(
+  GetIt getIt,
+  EnvironmentFilter envFilter,
+) async {
+  getIt.init(environmentFilter: envFilter);
 }
