@@ -115,6 +115,7 @@ final class CreateAppCommand extends Command<void> {
       '$appDir/lib',
       '$appDir/test',
       '$appDir/analysis_options.yaml',
+      '$appDir/pubspec.lock',
       '$appDir/pubspec.yaml',
       '$appDir/README.md',
     ];

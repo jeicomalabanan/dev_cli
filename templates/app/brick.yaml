@@ -8,4 +8,3 @@ environment:
 vars:
   app_name:
     type: string
-    description: Name of the Flutter application.
