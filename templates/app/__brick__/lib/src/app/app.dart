@@ -1,28 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
+import 'package:go_router/go_router.dart';
 
-import '../ui/routes/app_router_config.dart';
+final class App extends StatelessWidget {
+  const App({required this._router, super.key});
 
-class App extends StatefulWidget {
-  const App({super.key});
+  final GoRouter _router;
 
-  @override
-  State<App> createState() => _AppState();
-}
-
-class _AppState extends State<App> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
-      title: '{{app_name}}',
+      title: '{{app_name.titleCase()}}',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        appBarTheme: AppBarTheme(
+        colorScheme: .fromSeed(seedColor: Colors.deepPurple),
+        appBarTheme: const AppBarTheme(
           centerTitle: false,
           backgroundColor: Colors.lightBlue,
         ),
       ),
-      routerConfig: AppRouterConfig.routerConfig,
+      routerConfig: _router,
       builder: FlutterSmartDialog.init(),
     );
   }

@@ -8,3 +8,5 @@ environment:
 vars:
   app_name:
     type: string
+  org:
+    type: string

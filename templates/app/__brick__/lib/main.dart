@@ -1,30 +1,29 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
-void main() {
-  runApp(const App());
+import 'src/app/app.dart';
+import 'src/di/di.dart';
+
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await configureDependencies({});
+  runApp(App(router: _config));
 }
 
-class App extends StatelessWidget {
-  const App({super.key});
+final GlobalKey<NavigatorState> _rootNavigatorKey = GlobalKey(
+  debugLabel: 'root',
+);
 
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: '{{app_name}}',
-      debugShowCheckedModeBanner: false,
-      home: const HomeScreen(),
-    );
-  }
-}
-
-class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('{{app_name}}')),
-      body: const Center(child: Text('Hello from {{app_name}}')),
-    );
-  }
-}
+final GoRouter _config = GoRouter(
+  navigatorKey: _rootNavigatorKey,
+  initialLocation: '/',
+  debugLogDiagnostics: false,
+  observers: [],
+  routes: [],
+  redirect: (context, state) {
+    return null;
+  },
+  errorBuilder: (context, state) {
+    return Scaffold(body: Center(child: Text('Route not found: ${state.uri}')));
+  },
+);

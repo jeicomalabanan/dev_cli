@@ -1,0 +1,5 @@
+{
+  "BUILD_APP_NAME": "{{app_name.titleCase()}}",
+  "BUILD_APP_ID": "{{org}}.{{app_name.snakeCase()}}",
+  "BUILD_ENVIRONMENT": "prod"
+}

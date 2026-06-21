@@ -1,25 +1,22 @@
-import 'package:auth/auth_exports.dart' as auth;
-import 'package:core/core_exports.dart' as core;
-import 'package:framework/framework_exports.dart' as framework;
+import 'package:core_architecture/core_architecture.dart' as core_architecture;
+import 'package:core_foundation/core_foundation.dart' as core_foundation;
+import 'package:core_logging/core_logging.dart' as core_logging;
 import 'package:get_it/get_it.dart';
 import 'package:injectable/injectable.dart';
-import 'package:post/post_exports.dart' as post;
-import 'package:shared/shared_exports.dart' as shared;
-import 'package:user/user_exports.dart' as user;
 
 import 'di.config.dart';
 
 final getIt = GetIt.instance;
 
 @injectableInit
-Future<void> configureDependencies(Environment environment) async {
-  await framework.configureDependencies(getIt, environment);
-  await core.configureDependencies(getIt, environment);
-  await shared.configureDependencies(getIt, environment);
+Future<void> configureDependencies(Set<String> environment) async {
+  final envFilter = NoEnvOrContainsAll(environment);
+  // core packages
+  await core_logging.configureDependencies(getIt, envFilter);
+  await core_foundation.configureDependencies(getIt, envFilter);
+  await core_architecture.configureDependencies(getIt, envFilter);
   // feature packages
-  await auth.configureDependencies(getIt, environment);
-  await post.configureDependencies(getIt, environment);
-  await user.configureDependencies(getIt, environment);
+
   // app package
-  getIt.init(environment: environment.name);
+  getIt.init(environmentFilter: envFilter);
 }
