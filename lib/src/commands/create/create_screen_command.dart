@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:args/command_runner.dart';
 import 'package:mason/mason.dart';
 import 'package:path/path.dart' as path;
+import 'package:recase/recase.dart';
 
 import '../../../bundles/screen_bundle.dart';
 import '../../exceptions/cli_exception.dart';
@@ -61,7 +62,7 @@ final class CreateScreenCommand extends Command<void> {
       defaultValue: 'home',
     );
 
-    return _Args(template: template, screenName: screenName);
+    return _Args(template: template, screenName: ReCase(screenName).snakeCase);
   }
 
   Future<void> _createScaffoldScreen({
