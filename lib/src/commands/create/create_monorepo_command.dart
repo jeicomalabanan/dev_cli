@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:args/command_runner.dart';
 import 'package:mason/mason.dart';
 import 'package:path/path.dart' as path;
+import 'package:recase/recase.dart';
 
 import '../../../bundles/monorepo_bundle.dart';
 import '../../exceptions/cli_exception.dart';
@@ -47,7 +48,7 @@ final class CreateMonorepoCommand extends Command<void> {
       defaultValue: 'workspace',
     );
 
-    return _Args(monorepoName: monorepoName);
+    return _Args(monorepoName: ReCase(monorepoName).snakeCase);
   }
 
   Future<void> _createMonorepo({

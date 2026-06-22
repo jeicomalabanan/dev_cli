@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:args/command_runner.dart';
 import 'package:mason/mason.dart';
 import 'package:path/path.dart' as path;
+import 'package:recase/recase.dart';
 
 import '../../../bundles/flutter_package_bundle.dart';
 import '../../exceptions/cli_exception.dart';
@@ -69,7 +70,8 @@ final class CreatePackageCommand extends Command<void> {
       defaultValue: 'shared',
     );
 
-    return _Args(template: template, packageName: packageName);
+    return _Args(
+        template: template, packageName: ReCase(packageName).snakeCase);
   }
 
   Future<void> _createBasicPackage({

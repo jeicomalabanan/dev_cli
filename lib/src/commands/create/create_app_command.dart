@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:args/command_runner.dart';
 import 'package:mason/mason.dart';
 import 'package:path/path.dart' as path;
+import 'package:recase/recase.dart';
 
 import '../../../bundles/app_bundle.dart';
 import '../../exceptions/cli_exception.dart';
@@ -73,7 +74,7 @@ final class CreateAppCommand extends Command<void> {
 
     return _Args(
       template: template,
-      appName: appName,
+      appName: ReCase(appName).snakeCase,
       org: org,
       platforms: platforms,
     );
