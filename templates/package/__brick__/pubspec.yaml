@@ -10,7 +10,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  # core packages
+  # internal packages (core, infra, etc.)
   # pub.dev packages
   get_it: ^9.2.1
   injectable: ^3.0.0
