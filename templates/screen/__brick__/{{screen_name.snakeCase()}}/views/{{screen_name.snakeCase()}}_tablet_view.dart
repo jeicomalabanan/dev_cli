@@ -12,7 +12,7 @@ final class _{{screen_name.pascalCase()}}TabletViewState
     extends BaseScaffoldViewState<{{screen_name.pascalCase()}}TabletView> {
   @override
   PreferredSizeWidget? buildAppBar(BuildContext context) {
-    return super.buildAppBar(context);
+    return AppBar(title: const Text('{{screen_name.titleCase()}}'));
   }
 
   @override

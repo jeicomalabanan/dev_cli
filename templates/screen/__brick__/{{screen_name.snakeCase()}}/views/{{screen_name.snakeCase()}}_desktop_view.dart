@@ -12,7 +12,7 @@ final class _{{screen_name.pascalCase()}}DesktopViewState
     extends BaseScaffoldViewState<{{screen_name.pascalCase()}}DesktopView> {
   @override
   PreferredSizeWidget? buildAppBar(BuildContext context) {
-    return super.buildAppBar(context);
+    return AppBar(title: const Text('{{screen_name.titleCase()}}'));
   }
 
   @override
