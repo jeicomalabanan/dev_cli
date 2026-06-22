@@ -12,7 +12,7 @@ dependencies:
     sdk: flutter
   # internal packages (core, infra, etc.)
   # internal packages (features)
-  # pub.dev packages
+  # external packages (pub.dev)
   get_it: ^9.2.1
   injectable: ^3.0.0
 
