@@ -1,4 +1,4 @@
-name: dart_package
+name: package
 description: A new brick created with the Mason CLI.
 version: 0.0.1+1
 
@@ -8,4 +8,3 @@ environment:
 vars:
   package_name:
     type: string
-    description: The name of the dart package.

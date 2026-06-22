@@ -6,7 +6,7 @@ import 'package:mason/mason.dart';
 import 'package:path/path.dart' as path;
 import 'package:recase/recase.dart';
 
-import '../../../bundles/flutter_package_bundle.dart';
+import '../../../bundles/package_bundle.dart';
 import '../../exceptions/cli_exception.dart';
 import '../../extensions/logger_extensions.dart';
 import '../../models/enums/package_template.dart';
@@ -112,7 +112,7 @@ final class CreatePackageCommand extends Command<void> {
     await FileUtil.deletePaths(pathsToDelete);
 
     // generate package
-    final generator = await MasonGenerator.fromBundle(flutterPackageBundle);
+    final generator = await MasonGenerator.fromBundle(packageBundle);
     await generator.generate(
       DirectoryGeneratorTarget(Directory(packageDir)),
       vars: {'package_name': args.packageName},

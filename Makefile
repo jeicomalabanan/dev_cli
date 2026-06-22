@@ -12,7 +12,6 @@ bundle:
 	mason bundle templates/app -t dart -o lib/bundles
 	mason bundle templates/feature -t dart -o lib/bundles
 	mason bundle templates/monorepo -t dart -o lib/bundles
-	mason bundle templates/dart_package -t dart -o lib/bundles
-	mason bundle templates/flutter_package -t dart -o lib/bundles
 	mason bundle templates/screen -t dart -o lib/bundles
 	mason bundle templates/core_packages -t dart -o lib/bundles
+	mason bundle templates/package -t dart -o lib/bundles
