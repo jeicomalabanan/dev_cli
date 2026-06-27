@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import '../exceptions/cli_exception.dart';
+
 final class ProcessRunner {
   ProcessRunner._();
 
@@ -27,5 +29,31 @@ final class ProcessRunner {
       workingDirectory: workingDirectory,
       runInShell: true,
     );
+  }
+
+  static Future<void> createFlutterApp({
+    required String appDir,
+    required String appName,
+    required String org,
+    required String platforms,
+  }) async {
+    if (Directory(appDir).existsSync()) {
+      throw CliException('"$appName" already exists at $appDir');
+    }
+
+    final result = await ProcessRunner.run(
+      command: 'flutter',
+      args: [
+        'create',
+        '--template=app',
+        appDir,
+        '--org=$org',
+        '--platforms=$platforms',
+      ],
+    );
+
+    if (result.exitCode != 0) {
+      throw CliException(result.stderr.toString());
+    }
   }
 }

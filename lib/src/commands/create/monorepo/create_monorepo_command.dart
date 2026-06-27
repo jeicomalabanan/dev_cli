@@ -8,9 +8,12 @@ import 'package:recase/recase.dart';
 
 import '../../../../bundles/monorepo_bundle.dart';
 import '../../../exceptions/cli_exception.dart';
+import 'create_monorepo_app_command.dart';
 
 final class CreateMonorepoCommand extends Command<void> {
-  CreateMonorepoCommand(this.logger);
+  CreateMonorepoCommand(this.logger) {
+    addSubcommand(CreateMonorepoAppCommand(logger));
+  }
 
   final Logger logger;
 

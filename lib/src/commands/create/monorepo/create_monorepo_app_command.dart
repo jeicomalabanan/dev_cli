@@ -6,15 +6,16 @@ import 'package:mason/mason.dart';
 import 'package:path/path.dart' as path;
 import 'package:recase/recase.dart';
 
-import '../../exceptions/cli_exception.dart';
-import '../../extensions/logger_extensions.dart';
-import '../../models/enums/app_platform.dart';
-import '../../models/enums/app_template.dart';
-import '../../utils/file_util.dart';
-import '../../utils/process_runner.dart';
+import '../../../../bundles/monorepo_app_bundle.dart';
+import '../../../exceptions/cli_exception.dart';
+import '../../../extensions/logger_extensions.dart';
+import '../../../models/enums/app_platform.dart';
+import '../../../models/enums/app_template.dart';
+import '../../../utils/file_util.dart';
+import '../../../utils/process_runner.dart';
 
-final class CreateAppCommand extends Command<void> {
-  CreateAppCommand(this.logger);
+final class CreateMonorepoAppCommand extends Command<void> {
+  CreateMonorepoAppCommand(this.logger);
 
   final Logger logger;
 
@@ -32,20 +33,11 @@ final class CreateAppCommand extends Command<void> {
     final progress = logger.progress('Creating app');
 
     try {
-      switch (args.template) {
-        case AppTemplate.monorepo:
-          await _createMonorepoApp(
-            appDir: path.join(Directory.current.path, 'apps', args.appName),
-            args: args,
-          );
-          break;
-        case AppTemplate.basic:
-          await _createBasicApp(
-            appDir: path.join(Directory.current.path, args.appName),
-            args: args,
-          );
-          break;
-      }
+      await _createMonorepoApp(
+        appDir: path.join(Directory.current.path, 'apps', args.appName),
+        args: args,
+      );
+
       progress.complete('App "${args.appName}" created successfully.');
     } on CliException catch (e) {
       progress.fail(e.message);
@@ -79,37 +71,15 @@ final class CreateAppCommand extends Command<void> {
     );
   }
 
-  Future<void> _createBasicApp({
-    required String appDir,
-    required _Args args,
-  }) async {
-    // check if app already exists
-    if (Directory(appDir).existsSync()) {
-      throw CliException('"${args.appName}" already exists at $appDir');
-    }
-
-    // create app
-    final result = await ProcessRunner.run(
-      command: 'flutter',
-      args: [
-        'create',
-        '--template=app',
-        appDir,
-        '--org=${args.org}',
-        '--platforms=${args.platforms.map((e) => e.name).join(',')}',
-      ],
-    );
-
-    if (result.exitCode != 0) {
-      throw CliException(result.stderr.toString());
-    }
-  }
-
   Future<void> _createMonorepoApp({
     required String appDir,
     required _Args args,
   }) async {
-    await _createBasicApp(appDir: appDir, args: args);
+    await ProcessRunner.createFlutterApp(
+        appDir: appDir,
+        appName: args.appName,
+        org: args.org,
+        platforms: args.platforms.map((e) => e.name).join(','));
 
     final pathsToDelete = [
       '$appDir/lib',
@@ -121,13 +91,12 @@ final class CreateAppCommand extends Command<void> {
     ];
     await FileUtil.deletePaths(pathsToDelete);
 
-    // generate app
-    // final generator = await MasonGenerator.fromBundle(appBundle);
-    // await generator.generate(
-    //   DirectoryGeneratorTarget(Directory(appDir)),
-    //   vars: {'app_name': args.appName, 'org': args.org},
-    //   fileConflictResolution: FileConflictResolution.overwrite,
-    // );
+    final generator = await MasonGenerator.fromBundle(monorepoAppBundle);
+    await generator.generate(
+      DirectoryGeneratorTarget(Directory(appDir)),
+      vars: {'app_name': args.appName, 'org': args.org},
+      fileConflictResolution: FileConflictResolution.overwrite,
+    );
   }
 }
 

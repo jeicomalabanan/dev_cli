@@ -6,7 +6,6 @@ import 'package:mason/mason.dart';
 import 'package:path/path.dart' as path;
 import 'package:recase/recase.dart';
 
-import '../../../bundles/feature_bundle.dart';
 import '../../exceptions/cli_exception.dart';
 import '../../extensions/logger_extensions.dart';
 import '../../models/enums/feature_template.dart';
@@ -112,12 +111,12 @@ final class CreateFeatureCommand extends Command<void> {
     await FileUtil.deletePaths(pathsToDelete);
 
     // generate feature
-    final generator = await MasonGenerator.fromBundle(featureBundle);
-    await generator.generate(
-      DirectoryGeneratorTarget(Directory(featureDir)),
-      vars: {'feature_name': args.featureName},
-      fileConflictResolution: FileConflictResolution.overwrite,
-    );
+    // final generator = await MasonGenerator.fromBundle(featureBundle);
+    // await generator.generate(
+    //   DirectoryGeneratorTarget(Directory(featureDir)),
+    //   vars: {'feature_name': args.featureName},
+    //   fileConflictResolution: FileConflictResolution.overwrite,
+    // );
   }
 }
 
