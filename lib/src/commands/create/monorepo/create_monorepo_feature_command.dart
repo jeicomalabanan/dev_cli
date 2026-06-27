@@ -71,10 +71,11 @@ final class CreateMonorepoFeatureCommand extends Command<void> {
     required String featureDir,
     required _Args args,
   }) async {
-    await ProcessRunner.createFlutterPackage(
-      featureDir: featureDir,
-      featureName: args.featureName,
-    );
+    if (Directory(featureDir).existsSync()) {
+      throw CliException('"${args.featureName}" already exists at $featureDir');
+    }
+
+    await ProcessRunner.createFlutterPackage(packageDir: featureDir);
 
     final pathsToDelete = [
       '$featureDir/lib',

@@ -58,16 +58,11 @@ final class ProcessRunner {
   }
 
   static Future<void> createFlutterPackage({
-    required String featureDir,
-    required String featureName,
+    required String packageDir,
   }) async {
-    if (Directory(featureDir).existsSync()) {
-      throw CliException('"$featureName" already exists at $featureDir');
-    }
-
     final result = await run(
       command: 'flutter',
-      args: ['create', '--template=package', featureDir],
+      args: ['create', '--template=package', packageDir],
     );
 
     if (result.exitCode != 0) {

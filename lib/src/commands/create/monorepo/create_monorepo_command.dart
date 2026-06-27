@@ -10,11 +10,13 @@ import '../../../../bundles/monorepo_bundle.dart';
 import '../../../exceptions/cli_exception.dart';
 import 'create_monorepo_app_command.dart';
 import 'create_monorepo_feature_command.dart';
+import 'create_monorepo_package_command.dart';
 
 final class CreateMonorepoCommand extends Command<void> {
   CreateMonorepoCommand(this.logger) {
     addSubcommand(CreateMonorepoAppCommand(logger));
     addSubcommand(CreateMonorepoFeatureCommand(logger));
+    addSubcommand(CreateMonorepoPackageCommand(logger));
   }
 
   final Logger logger;
