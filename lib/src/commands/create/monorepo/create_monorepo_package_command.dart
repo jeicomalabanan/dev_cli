@@ -8,8 +8,6 @@ import 'package:recase/recase.dart';
 
 import '../../../../bundles/monorepo_package_bundle.dart';
 import '../../../exceptions/cli_exception.dart';
-import '../../../extensions/logger_extensions.dart';
-import '../../../models/enums/package_template.dart';
 import '../../../utils/file_util.dart';
 import '../../../utils/process_runner.dart';
 
@@ -50,19 +48,12 @@ final class CreateMonorepoPackageCommand extends Command<void> {
   }
 
   _Args? _promptArgs() {
-    final template = logger.chooseOneEnum(
-      message: 'Choose template:',
-      values: PackageTemplate.values.toList(),
-      defaultValue: PackageTemplate.monorepo,
-    );
-
     final packageName = logger.prompt(
       'Name of the package:',
       defaultValue: 'shared',
     );
 
     return _Args(
-      template: template,
       packageName: ReCase(packageName).snakeCase,
     );
   }
@@ -98,8 +89,7 @@ final class CreateMonorepoPackageCommand extends Command<void> {
 }
 
 final class _Args {
-  const _Args({required this.template, required this.packageName});
+  const _Args({required this.packageName});
 
-  final PackageTemplate template;
   final String packageName;
 }

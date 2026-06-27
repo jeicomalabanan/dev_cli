@@ -37,10 +37,6 @@ final class ProcessRunner {
     required String org,
     required String platforms,
   }) async {
-    if (Directory(appDir).existsSync()) {
-      throw CliException('"$appName" already exists at $appDir');
-    }
-
     final result = await run(
       command: 'flutter',
       args: [

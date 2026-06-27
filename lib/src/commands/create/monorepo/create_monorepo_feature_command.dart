@@ -8,8 +8,6 @@ import 'package:recase/recase.dart';
 
 import '../../../../bundles/monorepo_feature_bundle.dart';
 import '../../../exceptions/cli_exception.dart';
-import '../../../extensions/logger_extensions.dart';
-import '../../../models/enums/feature_template.dart';
 import '../../../utils/file_util.dart';
 import '../../../utils/process_runner.dart';
 
@@ -50,19 +48,12 @@ final class CreateMonorepoFeatureCommand extends Command<void> {
   }
 
   _Args? _promptArgs() {
-    final template = logger.chooseOneEnum(
-      message: 'Choose template:',
-      values: FeatureTemplate.values.toList(),
-      defaultValue: FeatureTemplate.monorepo,
-    );
-
     final featureName = logger.prompt(
       'Name of the feature:',
       defaultValue: 'auth',
     );
 
     return _Args(
-      template: template,
       featureName: ReCase(featureName).snakeCase,
     );
   }
@@ -98,8 +89,7 @@ final class CreateMonorepoFeatureCommand extends Command<void> {
 }
 
 final class _Args {
-  const _Args({required this.template, required this.featureName});
+  const _Args({required this.featureName});
 
-  final FeatureTemplate template;
   final String featureName;
 }
