@@ -41,7 +41,7 @@ final class ProcessRunner {
       throw CliException('"$appName" already exists at $appDir');
     }
 
-    final result = await ProcessRunner.run(
+    final result = await run(
       command: 'flutter',
       args: [
         'create',
@@ -50,6 +50,24 @@ final class ProcessRunner {
         '--org=$org',
         '--platforms=$platforms',
       ],
+    );
+
+    if (result.exitCode != 0) {
+      throw CliException(result.stderr.toString());
+    }
+  }
+
+  static Future<void> createFlutterPackage({
+    required String featureDir,
+    required String featureName,
+  }) async {
+    if (Directory(featureDir).existsSync()) {
+      throw CliException('"$featureName" already exists at $featureDir');
+    }
+
+    final result = await run(
+      command: 'flutter',
+      args: ['create', '--template=package', featureDir],
     );
 
     if (result.exitCode != 0) {

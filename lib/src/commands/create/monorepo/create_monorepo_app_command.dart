@@ -76,10 +76,11 @@ final class CreateMonorepoAppCommand extends Command<void> {
     required _Args args,
   }) async {
     await ProcessRunner.createFlutterApp(
-        appDir: appDir,
-        appName: args.appName,
-        org: args.org,
-        platforms: args.platforms.map((e) => e.name).join(','));
+      appDir: appDir,
+      appName: args.appName,
+      org: args.org,
+      platforms: args.platforms.map((e) => e.name).join(','),
+    );
 
     final pathsToDelete = [
       '$appDir/lib',
