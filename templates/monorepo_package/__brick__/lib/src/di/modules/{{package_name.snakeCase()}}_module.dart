@@ -1,4 +1,4 @@
 import 'package:injectable/injectable.dart';
 
 @module
-abstract class {{feature_name.pascalCase()}}Module {}
+abstract class {{package_name.pascalCase()}}Module {}
