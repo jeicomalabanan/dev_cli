@@ -1,3 +1,3 @@
 library;
 
-export 'src/di/di.dart';
+export 'src/di/di.module.dart';
