@@ -3,13 +3,13 @@ import 'package:go_router/go_router.dart';
 
 import '{{screen_name.snakeCase()}}_screen.dart';
 
-enum {{screen_name.pascalCase()}}Route {
-  initial(name: '{{screen_name.camelCase()}}', path: '{{screen_name.camelCase()}}');
+final class {{screen_name.pascalCase()}}Route {
+  const {{screen_name.pascalCase()}}Route._();
 
-  const {{screen_name.pascalCase()}}Route({required this.name, required this.path});
-
-  final String name;
-  final String path;
+  static const ({String name, String path}) route = (
+    name: '{{screen_name.camelCase()}}',
+    path: '{{screen_name.paramCase()}}',
+  );
 
   void go(BuildContext context) {
     context.goNamed(name);

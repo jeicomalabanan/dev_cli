@@ -17,7 +17,6 @@ final class _{{screen_name.pascalCase()}}MobileViewState
 
   @override
   Widget buildBody(BuildContext context) {
-    // TODO: implement buildBody
     throw UnimplementedError('Mobile View is not yet implemented.');
   }
 }

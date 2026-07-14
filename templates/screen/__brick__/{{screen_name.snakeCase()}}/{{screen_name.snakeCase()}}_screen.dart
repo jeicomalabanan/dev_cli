@@ -14,17 +14,17 @@ final class {{screen_name.pascalCase()}}Screen extends BaseScreen {
 
 final class _{{screen_name.pascalCase()}}ScreenState extends BaseScreenState<{{screen_name.pascalCase()}}Screen> {
   @override
-  Widget buildMobile(BuildContext context, Orientation orientation) {
+  Widget buildMobile(BuildContext context) {
     return const {{screen_name.pascalCase()}}MobileView();
   }
 
   @override
-  Widget? buildTablet(BuildContext context, Orientation orientation) {
+  Widget? buildTablet(BuildContext context) {
     return const {{screen_name.pascalCase()}}TabletView();
   }
 
   @override
-  Widget? buildDesktop(BuildContext context, Orientation orientation) {
+  Widget? buildDesktop(BuildContext context) {
     return const {{screen_name.pascalCase()}}DesktopView();
   }
 }

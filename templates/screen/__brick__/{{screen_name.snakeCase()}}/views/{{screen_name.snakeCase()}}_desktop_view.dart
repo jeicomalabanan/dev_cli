@@ -17,7 +17,6 @@ final class _{{screen_name.pascalCase()}}DesktopViewState
 
   @override
   Widget buildBody(BuildContext context) {
-    // TODO: implement buildBody
     throw UnimplementedError('Desktop View is not yet implemented.');
   }
 }

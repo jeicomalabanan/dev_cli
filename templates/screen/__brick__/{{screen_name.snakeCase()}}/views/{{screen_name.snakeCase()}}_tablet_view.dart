@@ -17,7 +17,6 @@ final class _{{screen_name.pascalCase()}}TabletViewState
 
   @override
   Widget buildBody(BuildContext context) {
-    // TODO: implement buildBody
     throw UnimplementedError('Tablet View is not yet implemented.');
   }
 }
