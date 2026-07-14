@@ -12,7 +12,7 @@ final class {{screen_name.pascalCase()}}Route {
   );
 
   void go(BuildContext context) {
-    context.goNamed(name);
+    context.goNamed(route.name);
   }
 
   static {{screen_name.pascalCase()}}Screen build(BuildContext _, GoRouterState _) {
