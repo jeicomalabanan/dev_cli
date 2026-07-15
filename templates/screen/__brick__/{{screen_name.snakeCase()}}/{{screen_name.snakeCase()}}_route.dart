@@ -11,8 +11,12 @@ final class {{screen_name.pascalCase()}}Route {
     path: '{{screen_name.paramCase()}}',
   );
 
-  void go(BuildContext context) {
+  static void go(BuildContext context) {
     context.goNamed(route.name);
+  }
+
+  static Future<void> pushNamed(BuildContext context) {
+    return context.pushNamed<void>(route.name);
   }
 
   static {{screen_name.pascalCase()}}Screen build(BuildContext _, GoRouterState _) {
