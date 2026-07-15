@@ -20,7 +20,7 @@ final class _{{screen_name.pascalCase()}}ScreenState extends BaseScreenState<{{s
   @override
   List<SingleChildWidget> buildBlocProviders() {
     return [
-      BlocProvider<{{screen_name.pascalCase()}}Bloc>(
+      BlocProvider(
         create: (_) => getIt<{{screen_name.pascalCase()}}Bloc>()..add(const {{screen_name.pascalCase()}}Started()),
       ),
     ];
