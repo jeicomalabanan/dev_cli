@@ -21,7 +21,8 @@ final class _{{screen_name.pascalCase()}}ScreenState extends BaseScreenState<{{s
   List<SingleChildWidget> buildBlocProviders() {
     return [
       BlocProvider<{{screen_name.pascalCase()}}Bloc>(
-        create: (context) => getIt<{{screen_name.pascalCase()}}Bloc>(),
+        create: (context) =>
+            getIt<{{screen_name.pascalCase()}}Bloc>()..add(const {{screen_name.pascalCase()}}Started()),
       ),
     ];
   }
