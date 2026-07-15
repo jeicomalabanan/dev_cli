@@ -32,12 +32,12 @@ final class _{{screen_name.pascalCase()}}ScreenState extends BaseScreenState<{{s
   }
 
   @override
-  Widget? buildTablet(BuildContext context) {
+  Widget buildTablet(BuildContext context) {
     return const {{screen_name.pascalCase()}}TabletView();
   }
 
   @override
-  Widget? buildDesktop(BuildContext context) {
+  Widget buildDesktop(BuildContext context) {
     return const {{screen_name.pascalCase()}}DesktopView();
   }
 }
