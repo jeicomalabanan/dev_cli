@@ -1,0 +1,3 @@
+- All LocalDto should be registered in hive_adapters.dart
+- All enums in LocalDto should be registered in hive_adapters.dart
+- 
